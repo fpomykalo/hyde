@@ -57,6 +57,39 @@ regenerating together** — say the word and it's a two-minute job.
 The static `illustrations/*.svg` files aren't referenced; the animated versions
 supersede them. They're kept as a fallback.
 
+## Compression
+
+Everything here has been re-encoded for the web. The originals are not kept in
+the working tree — they are in git history at commit `950c97b`, recoverable
+with `git checkout 950c97b -- assets/`.
+
+**Video** — the source was 1664 x 1248, 24fps, 11s, 13.9 Mbps, with a 316 kbps
+AAC track the page never plays (the element is muted). Audio stripped, then
+encoded twice; the browser takes the first it supports:
+
+| File | Encode | Size |
+|---|---|---|
+| `hero-video.webm` | VP9, CRF 34, `-b:v 0` | 780 KB |
+| `hero-video.mp4` | H.264 high, CRF 24, `-preset slow`, `+faststart` | 2.9 MB |
+
+Both measure SSIM 0.97 against the source, which is past the point of visible
+difference. `+faststart` puts the index at the head of the mp4 so it starts
+playing before it has finished downloading. Full frame is kept rather than
+cropped to the hero's 16:10 window, so changing the hero height later doesn't
+need a re-encode.
+
+**Stills** — resized to roughly 2x the largest box each is drawn into, then
+JPEG re-encoded (progressive, optimized):
+
+| Set | Size | Quality | Result |
+|---|---|---|---|
+| `photos/` | 1400 x 1045 | 82 | 3.1–3.5 MB → 220–290 KB each |
+| `gradients/` | 1600 x 1195 | 80 | ~1 MB → 190–260 KB each |
+| `videos/hero stills/` | 1664 x 1242 | 80 | 0.7–1 MB → 137–210 KB |
+
+First paint went from **43.4 MB to 3.3 MB**. Re-run the same settings after any
+re-export, or ask and it'll be done.
+
 ## Still missing
 
 - **Blog card images** — `photos/blog-manifesto.jpg` and
