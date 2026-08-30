@@ -5,22 +5,17 @@
    ========================================================================== */
 
 /* --- Typefaces -----------------------------------------------------------
-   New Science and Neue Montreal are licensed faces and are not on any CDN.
-   Drop the woff2 files into assets/fonts/ (see assets/README.md) and these
-   rules pick them up. Until then the fallback stack renders.
+   New Science is an Adobe/Typekit font — it is loaded by the stylesheet link
+   in index.html (use.typekit.net), not from assets/. Its family name there is
+   lowercase-hyphenated: "new-science", Medium is weight 500.
+
+   Neue Montreal is self-hosted from assets/fonts/. IBM Plex Mono comes from
+   Google Fonts, also linked in index.html.
    ------------------------------------------------------------------------ */
 
 @font-face {
-  font-family: "New Science";
-  src: url("../assets/fonts/NewScience-Medium.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Neue Montreal";
-  src: url("../assets/fonts/NeueMontreal-Regular.woff2") format("woff2");
+  src: url("../assets/fonts/NeueMontreal-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -28,7 +23,7 @@
 
 :root {
   /* Type stacks */
-  --font-display: "New Science", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "new-science", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-body: "Neue Montreal", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 

@@ -446,6 +446,7 @@ a {
 }
 
 .hero__bg img,
+.hero__bg video,
 .hero__bg .asset {
   width: 100%;
   height: 100%;
@@ -821,19 +822,25 @@ a {
   transition: opacity 600ms var(--ease-out), visibility 0s;
 }
 
-.campfire__frame iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-}
-
-.campfire__frame img,
+/* The gradient fills the stage; the diagram sits centred on top of it. */
+.campfire__gradient,
 .campfire__frame .asset {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+/* Width comes from an inline style per tab, scaled from Figma's 437px
+   illustration box on tab 1; height follows the diagram's own aspect. */
+.campfire__art {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .campfire__caption {
@@ -902,12 +909,13 @@ a {
 
 .ind__link { left: 20px; top: 473px; }
 
-/* Prev / next chevrons — a 37px right angle rotated 45°, per Figma's Union */
+/* Prev / next chevrons — assets/vectors/arrow-*.svg, 28 x 53, sitting on the
+   vertical centre of the cards (card band 124..624, centre 374). */
 .industries__arrow {
   position: absolute;
-  top: 347.84px;
-  width: 52.33px;
-  height: 52.33px;
+  top: 347.5px;
+  width: 28px;
+  height: 53px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -922,17 +930,10 @@ a {
 
 .industries__arrow[hidden] { display: none; }
 
-.industries__arrow--next { left: 1288.39px; }
-.industries__arrow--prev { left: 99.28px; }
+.industries__arrow--next { left: 1314px; }
+.industries__arrow--prev { left: 98px; }
 
-.industries__arrow svg {
-  width: 37px;
-  height: 37px;
-  overflow: visible;
-}
-
-.industries__arrow--next svg { transform: rotate(45deg); }
-.industries__arrow--prev svg { transform: rotate(225deg); }
+.industries__arrow img { display: block; width: 28px; height: 53px; }
 
 .industries__dots {
   position: absolute;

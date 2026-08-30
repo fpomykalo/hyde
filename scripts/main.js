@@ -17,9 +17,9 @@
   /* ------------------------------------------------------------------------
      1. Asset placeholders
 
-     Nothing in assets/ is committed yet. Rather than showing broken-image
-     glyphs, swap any image that fails to load for a box at the exact same
-     dimensions, labelled with the file it's waiting for.
+     Rather than showing broken-image glyphs, swap any image that fails to
+     load for a box at the exact same dimensions, labelled with the file it is
+     waiting for. Only the two blog card images are outstanding.
      ---------------------------------------------------------------------- */
 
   function placeholderFor(img) {
@@ -150,30 +150,6 @@
     var animation = null;
     var visible = false;
 
-    function loadAnimation(frame) {
-      var src = frame.getAttribute('data-anim');
-      if (!src || frame.dataset.loaded) return;
-      frame.dataset.loaded = '1';
-
-      // Probe first: if the HTML animation isn't uploaded yet, keep the still.
-      fetch(src, { method: 'HEAD' })
-        .then(function (res) {
-          if (!res.ok) return;
-          var iframe = document.createElement('iframe');
-          iframe.src = src;
-          iframe.setAttribute('loading', 'lazy');
-          iframe.setAttribute('title', '');
-          iframe.setAttribute('aria-hidden', 'true');
-          iframe.setAttribute('scrolling', 'no');
-          frame.insertBefore(iframe, frame.firstChild);
-          var still = frame.querySelector('img, .asset');
-          if (still) still.remove();
-        })
-        .catch(function () {
-          /* offline or file:// — the still stays */
-        });
-    }
-
     function startTimer() {
       var bar = panes[index] && panes[index].querySelector('.campfire__progress');
       if (!bar) return;
@@ -221,7 +197,6 @@
         frame.classList.toggle('is-active', i === index);
       });
 
-      loadAnimation(frames[index]);
       startTimer();
     }
 
@@ -231,7 +206,6 @@
       });
     });
 
-    loadAnimation(frames[0]);
     startTimer();
 
     if ('IntersectionObserver' in window) {
