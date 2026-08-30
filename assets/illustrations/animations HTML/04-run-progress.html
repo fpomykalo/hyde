@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Run progress — animated diagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Transparent background by design — sits over any gradient.
+   Animation: 3s draw, 2s hold, 5s loop. Aspect ratio 520:312. */
+html,body{margin:0;padding:0;background:transparent;}
+.hyde-diagram{display:block;width:100%;height:auto;max-width:520px;margin:0 auto;overflow:visible;}
+@media (prefers-reduced-motion: reduce){
+  .hyde-diagram *{animation-duration:.001s !important;animation-delay:0s !important;}
+}
+@keyframes dr_0_35{0%{stroke-dashoffset:1}35%,100%{stroke-dashoffset:0}}
+@keyframes dr_30_42{0%,30%{stroke-dashoffset:1}42%,100%{stroke-dashoffset:0}}
+@keyframes dr_35_55{0%,35%{stroke-dashoffset:1}55%,100%{stroke-dashoffset:0}}
+@keyframes dr_8_38{0%,8%{stroke-dashoffset:1}38%,100%{stroke-dashoffset:0}}
+@keyframes dr_0_15{0%{stroke-dashoffset:1}15%,100%{stroke-dashoffset:0}}
+@keyframes dr_12_40{0%,12%{stroke-dashoffset:1}40%,100%{stroke-dashoffset:0}}
+@keyframes dr_7_13{0%,7%{stroke-dashoffset:1}13%,100%{stroke-dashoffset:0}}
+@keyframes dr_20_26{0%,20%{stroke-dashoffset:1}26%,100%{stroke-dashoffset:0}}
+@keyframes dr_33_39{0%,33%{stroke-dashoffset:1}39%,100%{stroke-dashoffset:0}}
+@keyframes wp_20_40{0%,20%{transform:scaleX(0)}40%,100%{transform:scaleX(1)}}
+@keyframes wp_26_46{0%,26%{transform:scaleX(0)}46%,100%{transform:scaleX(1)}}
+@keyframes wp_32_52{0%,32%{transform:scaleX(0)}52%,100%{transform:scaleX(1)}}
+@keyframes wp_22_48{0%,22%{transform:scaleX(0)}48%,100%{transform:scaleX(1)}}
+@keyframes wp_30_56{0%,30%{transform:scaleX(0)}56%,100%{transform:scaleX(1)}}
+@keyframes pp_0_8{0%{opacity:0;transform:scale(.3)}8%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_0_7{0%{opacity:0;transform:scale(.3)}7%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_13_20{0%,13%{opacity:0;transform:scale(.3)}20%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_26_33{0%,26%{opacity:0;transform:scale(.3)}33%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_39_45{0%,39%{opacity:0;transform:scale(.3)}45%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_38_48{0%,38%{opacity:0;transform:scale(.3)}48%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_40_48{0%,40%{opacity:0;transform:scale(.3)}48%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_46_54{0%,46%{opacity:0;transform:scale(.3)}54%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_52_58{0%,52%{opacity:0;transform:scale(.3)}58%,100%{opacity:1;transform:scale(1)}}
+@keyframes tp_5_20{0%,5%{transform:scaleX(0)}20%,100%{transform:scaleX(1)}}
+@keyframes tp_8_24{0%,8%{transform:scaleX(0)}24%,100%{transform:scaleX(1)}}
+@keyframes tp_12_24{0%,12%{transform:scaleX(0)}24%,100%{transform:scaleX(1)}}
+@keyframes tp_24_32{0%,24%{transform:scaleX(0)}32%,100%{transform:scaleX(1)}}
+@keyframes tp_20_33{0%,20%{transform:scaleX(0)}33%,100%{transform:scaleX(1)}}
+@keyframes tp_33_46{0%,33%{transform:scaleX(0)}46%,100%{transform:scaleX(1)}}
+@keyframes tp_46_60{0%,46%{transform:scaleX(0)}60%,100%{transform:scaleX(1)}}
+
+</style></head>
+<body>
+<svg class="hyde-diagram" preserveAspectRatio="xMidYMid meet" width="100%" height="auto" viewBox="0 0 260 156" style="overflow:visible">
+<defs>
+<mask id="d4_chk1"><rect x="0.5" y="14.8" width="29.67" height="29.67" rx="4" fill="#fff"></rect><path d="M8.05,29.32l4.97,4.97,8.88-8.88" style="fill:none;stroke:#000;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round"></path></mask>
+<mask id="d4_chk2"><rect x="75.49" y="14.8" width="29.67" height="29.67" rx="4" fill="#fff"></rect><path d="M83.04,29.32l4.97,4.97,8.88-8.88" style="fill:none;stroke:#000;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round"></path></mask>
+<clipPath id="d4_tc7" clipPathUnits="userSpaceOnUse"><rect x="0" y="82" width="112" height="14" style="transform-box:fill-box;transform-origin:left center;animation:tp_5_20 5s steps(17) infinite both"></rect></clipPath>
+<clipPath id="d4_tc8" clipPathUnits="userSpaceOnUse"><rect x="0" y="100" width="156" height="14" style="transform-box:fill-box;transform-origin:left center;animation:tp_20_33 5s steps(24) infinite both"></rect></clipPath>
+<clipPath id="d4_tc9" clipPathUnits="userSpaceOnUse"><rect x="0" y="118" width="203" height="14" style="transform-box:fill-box;transform-origin:left center;animation:tp_33_46 5s steps(31) infinite both"></rect></clipPath>
+<clipPath id="d4_tc10" clipPathUnits="userSpaceOnUse"><rect x="0" y="136" width="203" height="14" style="transform-box:fill-box;transform-origin:left center;animation:tp_46_60 5s steps(31) infinite both"></rect></clipPath>
+<clipPath id="d4_tc11" clipPathUnits="userSpaceOnUse"><rect x="0" y="0" width="21" height="12" style="transform-box:fill-box;transform-origin:left center;animation:tp_5_20 5s steps(3) infinite both"></rect></clipPath>
+<clipPath id="d4_tc12" clipPathUnits="userSpaceOnUse"><rect x="75" y="0" width="21" height="12" style="transform-box:fill-box;transform-origin:left center;animation:tp_20_33 5s steps(3) infinite both"></rect></clipPath>
+<clipPath id="d4_tc13" clipPathUnits="userSpaceOnUse"><rect x="150" y="0" width="21" height="12" style="transform-box:fill-box;transform-origin:left center;animation:tp_33_46 5s steps(3) infinite both"></rect></clipPath>
+<clipPath id="d4_tc14" clipPathUnits="userSpaceOnUse"><rect x="225" y="0" width="21" height="12" style="transform-box:fill-box;transform-origin:left center;animation:tp_46_60 5s steps(3) infinite both"></rect></clipPath>
+</defs>
+<rect x="0.5" y="14.8" width="29.67" height="29.67" rx="4" mask="url(#d4_chk1)" style="fill:#fff;transform-box:fill-box;transform-origin:center;animation:pp_0_7 5s ease-out infinite both"></rect>
+<rect x="75.49" y="14.8" width="29.67" height="29.67" rx="4" mask="url(#d4_chk2)" style="fill:#fff;transform-box:fill-box;transform-origin:center;animation:pp_13_20 5s ease-out infinite both"></rect>
+<g style="transform-box:fill-box;transform-origin:center;animation:pp_26_33 5s ease-out infinite both">
+<rect x="150.62" y="14.8" width="29.67" height="29.67" rx="4" style="fill:none;stroke:#fff;stroke-width:2"></rect>
+<circle cx="165.45" cy="29.63" r="6.4" style="fill:none;stroke:#fff;stroke-width:2"></circle>
+</g>
+<rect x="225.62" y="14.8" width="29.67" height="29.67" rx="4" style="fill:none;stroke:#fff;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:pp_39_45 5s ease-out infinite both"></rect>
+<line pathLength="1" x1="38.07" y1="29.63" x2="67.36" y2="29.63" style="stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-dasharray:1 2;animation:dr_7_13 5s ease-out infinite both"></line>
+<line pathLength="1" x1="113.07" y1="29.63" x2="142.36" y2="29.63" style="stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-dasharray:1 2;animation:dr_20_26 5s ease-out infinite both"></line>
+<line pathLength="1" x1="188.06" y1="29.63" x2="217.35" y2="29.63" style="stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-dasharray:1 2;animation:dr_33_39 5s ease-out infinite both"></line>
+<g style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;fill:#fff">
+<g clip-path="url(#d4_tc11)"><text transform="translate(1 8.489624)"><tspan x="0" y="0">1.0</tspan></text></g>
+<g clip-path="url(#d4_tc12)"><text transform="translate(75.99 8.489624)"><tspan x="0" y="0">2.0</tspan></text></g>
+<g clip-path="url(#d4_tc13)"><text transform="translate(151.12 8.489624)"><tspan x="0" y="0">3.0</tspan></text></g>
+<g clip-path="url(#d4_tc14)"><text transform="translate(226.11 8.489624)"><tspan x="0" y="0">4.0</tspan></text></g>
+</g>
+<g style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;fill:#fff">
+<g clip-path="url(#d4_tc7)"><text transform="translate(1 92.5113525)"><tspan x="0" y="0">GPU 0% • 40,6/96G</tspan></text></g>
+<g clip-path="url(#d4_tc8)">
+<rect x="1" y="106.9" width="2.4" height="3.5" rx="1.1" style="fill:#fff"></rect>
+<rect x="4.9" y="105.03" width="2.4" height="5.37" rx="1.1" style="fill:#fff"></rect>
+<rect x="8.8" y="103.19" width="2.4" height="7.22" rx="1.1" style="fill:#fff"></rect>
+<text transform="translate(1 110.5113525)"><tspan x="17" y="0">RUNNING • GRPO 4m 34s</tspan></text>
+</g>
+<g clip-path="url(#d4_tc9)"><text transform="translate(1 128.5113525)"><tspan x="0" y="0">LOSS</tspan><tspan x="63" y="0">• 0.1688</tspan><tspan x="137" y="0">• gen 271t</tspan></text></g>
+<g clip-path="url(#d4_tc10)"><text transform="translate(1 146.5113525)"><tspan x="0" y="0">KL ERROR</tspan><tspan x="63" y="0">• 0.0001</tspan><tspan x="137" y="0">• val 150t</tspan></text></g>
+</g>
+</svg>
+</body></html>

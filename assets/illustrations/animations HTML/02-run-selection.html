@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Run selection — animated diagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Transparent background by design — sits over any gradient.
+   Animation: 3s draw, 2s hold, 5s loop. Aspect ratio 840:380. */
+html,body{margin:0;padding:0;background:transparent;}
+.hyde-diagram{display:block;width:100%;height:auto;max-width:840px;margin:0 auto;overflow:visible;}
+@media (prefers-reduced-motion: reduce){
+  .hyde-diagram *{animation-duration:.001s !important;animation-delay:0s !important;}
+}
+@keyframes dr_0_35{0%{stroke-dashoffset:1}35%,100%{stroke-dashoffset:0}}
+@keyframes dr_30_42{0%,30%{stroke-dashoffset:1}42%,100%{stroke-dashoffset:0}}
+@keyframes dr_35_55{0%,35%{stroke-dashoffset:1}55%,100%{stroke-dashoffset:0}}
+@keyframes dr_8_38{0%,8%{stroke-dashoffset:1}38%,100%{stroke-dashoffset:0}}
+@keyframes dr_0_15{0%{stroke-dashoffset:1}15%,100%{stroke-dashoffset:0}}
+@keyframes dr_12_40{0%,12%{stroke-dashoffset:1}40%,100%{stroke-dashoffset:0}}
+@keyframes dr_7_13{0%,7%{stroke-dashoffset:1}13%,100%{stroke-dashoffset:0}}
+@keyframes dr_20_26{0%,20%{stroke-dashoffset:1}26%,100%{stroke-dashoffset:0}}
+@keyframes dr_33_39{0%,33%{stroke-dashoffset:1}39%,100%{stroke-dashoffset:0}}
+@keyframes wp_20_40{0%,20%{transform:scaleX(0)}40%,100%{transform:scaleX(1)}}
+@keyframes wp_26_46{0%,26%{transform:scaleX(0)}46%,100%{transform:scaleX(1)}}
+@keyframes wp_32_52{0%,32%{transform:scaleX(0)}52%,100%{transform:scaleX(1)}}
+@keyframes wp_22_48{0%,22%{transform:scaleX(0)}48%,100%{transform:scaleX(1)}}
+@keyframes wp_30_56{0%,30%{transform:scaleX(0)}56%,100%{transform:scaleX(1)}}
+@keyframes pp_0_8{0%{opacity:0;transform:scale(.3)}8%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_0_7{0%{opacity:0;transform:scale(.3)}7%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_13_20{0%,13%{opacity:0;transform:scale(.3)}20%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_26_33{0%,26%{opacity:0;transform:scale(.3)}33%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_39_45{0%,39%{opacity:0;transform:scale(.3)}45%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_38_48{0%,38%{opacity:0;transform:scale(.3)}48%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_40_48{0%,40%{opacity:0;transform:scale(.3)}48%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_46_54{0%,46%{opacity:0;transform:scale(.3)}54%,100%{opacity:1;transform:scale(1)}}
+@keyframes pp_52_58{0%,52%{opacity:0;transform:scale(.3)}58%,100%{opacity:1;transform:scale(1)}}
+@keyframes tp_5_20{0%,5%{transform:scaleX(0)}20%,100%{transform:scaleX(1)}}
+@keyframes tp_8_24{0%,8%{transform:scaleX(0)}24%,100%{transform:scaleX(1)}}
+@keyframes tp_12_24{0%,12%{transform:scaleX(0)}24%,100%{transform:scaleX(1)}}
+@keyframes tp_24_32{0%,24%{transform:scaleX(0)}32%,100%{transform:scaleX(1)}}
+@keyframes tp_20_33{0%,20%{transform:scaleX(0)}33%,100%{transform:scaleX(1)}}
+@keyframes tp_33_46{0%,33%{transform:scaleX(0)}46%,100%{transform:scaleX(1)}}
+@keyframes tp_46_60{0%,46%{transform:scaleX(0)}60%,100%{transform:scaleX(1)}}
+
+</style></head>
+<body>
+<svg class="hyde-diagram" preserveAspectRatio="xMidYMid meet" width="100%" height="auto" viewBox="-6 0 420 190" style="overflow:visible">
+<defs>
+<clipPath id="d2_w1" clipPathUnits="userSpaceOnUse"><rect x="6" y="0" width="290" height="190" style="transform-box:fill-box;transform-origin:left center;animation:wp_20_40 5s ease-in-out infinite both"></rect></clipPath>
+<clipPath id="d2_w2" clipPathUnits="userSpaceOnUse"><rect x="6" y="0" width="290" height="190" style="transform-box:fill-box;transform-origin:left center;animation:wp_26_46 5s ease-in-out infinite both"></rect></clipPath>
+<clipPath id="d2_w3" clipPathUnits="userSpaceOnUse"><rect x="6" y="0" width="290" height="190" style="transform-box:fill-box;transform-origin:left center;animation:wp_32_52 5s ease-in-out infinite both"></rect></clipPath>
+<clipPath id="d2_tc3" clipPathUnits="userSpaceOnUse"><rect x="3" y="170" width="93" height="14" style="transform-box:fill-box;transform-origin:left center;animation:tp_5_20 5s steps(14) infinite both"></rect></clipPath>
+<clipPath id="d2_tc4" clipPathUnits="userSpaceOnUse"><rect x="311" y="24" width="86.5" height="14" style="transform-box:fill-box;transform-origin:left center;animation:tp_46_60 5s steps(13) infinite both"></rect></clipPath>
+</defs>
+<g style="transform-box:fill-box;transform-origin:center;animation:pp_0_8 5s ease-out infinite both">
+<circle cx="7" cy="147.1528019" r="6.5" style="fill:none;stroke:#fff;stroke-width:1.4"></circle>
+<circle cx="7" cy="147.1528019" r="3" style="fill:#fff"></circle>
+</g>
+<g clip-path="url(#d2_w1)"><path d="M16.2523163,143.3650701c30.2280273-11.3826294,132.1713867-42.2454224,270.9199219-4.5456848" style="fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-dasharray:0 6"></path></g>
+<g clip-path="url(#d2_w2)"><path d="M14.8533906,140.9232976c28.2412109-21.0334778,130.5327148-85.8369904,272.324707-44.2201233" style="fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-dasharray:0 6"></path></g>
+<g clip-path="url(#d2_w3)"><path d="M10.3397187,137.735523C25.0101288,100.4405706,91.9412812-32.8694117,287.1121796,9.0732763" style="fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-dasharray:0 6"></path></g>
+<path pathLength="1" d="M7,147.1528019S104.6688037,1.000003,275.3120289,50.8676409" style="fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-dasharray:1 2;animation:dr_8_38 5s ease-in-out infinite both"></path>
+<g style="transform-box:fill-box;transform-origin:center;animation:pp_40_48 5s ease-out infinite both">
+<circle cx="291.9930709" cy="140.1528019" r="4" style="fill:none;stroke:#fff;stroke-width:1.2"></circle>
+<circle cx="291.9930709" cy="140.1528019" r="1.5" style="fill:#fff"></circle>
+</g>
+<g style="transform-box:fill-box;transform-origin:center;animation:pp_46_54 5s ease-out infinite both">
+<circle cx="291.9930709" cy="98.1528019" r="4" style="fill:none;stroke:#fff;stroke-width:1.2"></circle>
+<circle cx="291.9930709" cy="98.1528019" r="1.5" style="fill:#fff"></circle>
+</g>
+<g style="transform-box:fill-box;transform-origin:center;animation:pp_52_58 5s ease-out infinite both">
+<circle cx="291.9930709" cy="10.1528019" r="4" style="fill:none;stroke:#fff;stroke-width:1.2"></circle>
+<circle cx="291.9930709" cy="10.1528019" r="1.5" style="fill:#fff"></circle>
+</g>
+<g style="transform-box:fill-box;transform-origin:center;animation:pp_38_48 5s ease-out infinite both">
+<circle cx="291.9930709" cy="54.1528019" r="17" style="fill:none;stroke:#fff;stroke-width:2"></circle>
+<circle cx="291.9930709" cy="54.1528019" r="5" style="fill:#fff"></circle>
+<line x1="291.9930709" y1="29.1528019" x2="291.9930709" y2="37.1528019" style="stroke:#fff;stroke-width:2;stroke-linecap:round"></line>
+<line x1="291.9930709" y1="71.1528019" x2="291.9930709" y2="79.1528019" style="stroke:#fff;stroke-width:2;stroke-linecap:round"></line>
+<line x1="266.9930709" y1="54.1528019" x2="274.9930709" y2="54.1528019" style="stroke:#fff;stroke-width:2;stroke-linecap:round"></line>
+<line x1="308.9930709" y1="54.1528019" x2="316.9930709" y2="54.1528019" style="stroke:#fff;stroke-width:2;stroke-linecap:round"></line>
+</g>
+<g clip-path="url(#d2_tc3)"><text transform="translate(3.9995182 180.6056289)" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;fill:#fff"><tspan x="0" y="0">CANDIDATE RUNS</tspan></text></g>
+<g clip-path="url(#d2_tc4)"><text transform="translate(311.9951236 34.1510391)" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;fill:#fff"><tspan x="0" y="0">AUTO-SELECTED</tspan></text></g>
+</svg>
+</body></html>
