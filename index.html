@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Hyde — Stop Renting Intelligence</title>
+<meta name="description" content="Hyde's training platform and forward deployed model helps institutions leverage their own knowledge to build custom AI models.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/main.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<!-- ======================================================================
+     Navigation — fixed. Two colourways, swapped by the section currently
+     under the bar (data-bg="dark" / "light"). The logo cross-fades between
+     its white and black lockups with it.
+     ====================================================================== -->
+<header class="nav" id="nav">
+  <a class="nav__logo" href="#top" aria-label="Hyde — home">
+    <img class="logo--light" src="assets/logo/hyde-logo-white.svg" alt="Hyde" width="105" height="31">
+    <img class="logo--dark" src="assets/logo/hyde-logo-black.svg" alt="" width="105" height="31" aria-hidden="true">
+  </a>
+  <a class="nav__item nav__item--platform cap" href="#campfire">
+    <span class="nav__dot" aria-hidden="true"></span>platform
+  </a>
+  <a class="nav__item nav__item--industries cap" href="#industries">Industries</a>
+  <a class="nav__item nav__item--careers cap" href="#careers">careers&nbsp;↗</a>
+  <a class="nav__item nav__item--blog cap" href="#blog">blog&nbsp;↗</a>
+  <a class="nav__item nav__item--contact cap" href="#contact">Contact&nbsp;↗</a>
+</header>
+
+<main class="page" id="top">
+
+  <!-- ====================================================================
+       HERO — 1440 × 900
+       ==================================================================== -->
+  <section class="section section--hero" data-bg="dark">
+    <div class="hero__bg">
+      <img src="assets/backgrounds/hero.png" alt="" width="1440" height="900">
+    </div>
+
+    <div class="hero__rule"></div>
+
+    <p class="hero__eyebrow cap">Your model. your weights. your advantage.</p>
+
+    <h1 class="hero__line hero__line--one cap reveal" style="--reveal-delay:100ms">Stop Renting</h1>
+    <p class="hero__line hero__line--two cap reveal" style="--reveal-delay:250ms">Intelligence.</p>
+
+    <p class="hero__lede cap reveal" style="--reveal-delay:400ms">↘<br>Hyde&rsquo;s training platform and forward deployed model helps institutions leverage their own knowledge to build custom AI models.</p>
+
+    <!-- Partner strip: fixed 7-cell frame, logos drift left inside cells 2–7 -->
+    <div class="logostrip logostrip--hero reveal" style="top:820px; --reveal-delay:550ms">
+      <div class="logostrip__viewport">
+        <div class="logostrip__track" data-marquee="left" data-speed="45">
+          <div class="logostrip__tile"><img src="assets/partners/palantir.svg" alt="Palantir" width="85" height="20"></div>
+          <div class="logostrip__tile"><img src="assets/partners/nvidia.svg" alt="NVIDIA" width="106" height="20"></div>
+          <div class="logostrip__tile"><img src="assets/partners/bain.svg" alt="Bain &amp; Company" width="155" height="17"></div>
+          <div class="logostrip__tile"><img src="assets/partners/aws.svg" alt="AWS" width="43" height="26"></div>
+          <div class="logostrip__tile"><img src="assets/partners/general-catalyst.svg" alt="General Catalyst" width="132" height="17"></div>
+          <div class="logostrip__tile"><img src="assets/partners/bcv.svg" alt="Bain Capital Ventures" width="94" height="17"></div>
+        </div>
+      </div>
+      <div class="logostrip__frame" aria-hidden="true">
+        <span class="logostrip__cell" style="width:183px"></span>
+        <span class="logostrip__cell" style="width:184px"></span>
+        <span class="logostrip__cell" style="width:184px"></span>
+        <span class="logostrip__cell" style="width:184px"></span>
+        <span class="logostrip__cell" style="width:184px"></span>
+        <span class="logostrip__cell" style="width:184px"></span>
+        <span class="logostrip__cell" style="width:183px"></span>
+      </div>
+      <p class="logostrip__label cap">our partners</p>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       TWO PATHS TO SPECIALIST AI — header 1053, cards 1176
+       ==================================================================== -->
+  <section class="section section--paths" data-bg="light">
+    <div class="header-block"></div>
+    <h2 class="h2 cap reveal">Two Paths to Specialist AI</h2>
+    <span class="chip chip--grey eyebrow cap reveal" style="--reveal-delay:80ms">ENGAGEMENT MODELS</span>
+
+    <article class="card paths__card--one reveal" style="--reveal-delay:160ms">
+      <div class="card__media"><img src="assets/two-paths/training-rig.jpg" alt="" width="641" height="500"></div>
+      <div class="card__overlay card__overlay--base"></div>
+      <div class="card__overlay card__overlay--hover"></div>
+      <span class="card-index cap">1.</span>
+      <span class="chip chip--ghost paths__chip cap"><span class="dot" aria-hidden="true"></span>SAAS model</span>
+      <h3 class="card__title paths__title cap">Training Rig</h3>
+      <p class="paths__copy cap">Hyde&rsquo;s training runtime plane,<br>deployable in your cloud or ours.</p>
+      <a class="btn btn--outline-white paths__btn cap" href="#contact">Talk to an engineer&nbsp;↗</a>
+    </article>
+
+    <article class="card paths__card--two reveal" style="--reveal-delay:240ms">
+      <div class="card__media"><img src="assets/two-paths/embedded-team.jpg" alt="" width="640" height="500"></div>
+      <div class="card__overlay card__overlay--base"></div>
+      <div class="card__overlay card__overlay--hover"></div>
+      <span class="card-index cap">2.</span>
+      <span class="chip chip--ghost paths__chip cap"><span class="dot" aria-hidden="true"></span>fdp model</span>
+      <h3 class="card__title paths__title cap">Embedded Team</h3>
+      <p class="paths__copy cap">Digital transformation, plugging<br>the model into your business.</p>
+      <a class="btn btn--outline-white paths__btn cap" href="#contact">book a demo&nbsp;↗</a>
+    </article>
+  </section>
+
+  <!-- ====================================================================
+       CAMPFIRE — four tabs on a 7s timer, header 1725
+       ==================================================================== -->
+  <section class="section section--campfire" id="campfire" data-bg="light">
+    <div class="header-block"></div>
+    <h2 class="h2 cap reveal">Campfire</h2>
+    <span class="campfire__mark reveal" style="--reveal-delay:60ms">
+      <img src="assets/logo/campfire-mark.svg" alt="" width="72" height="43">
+    </span>
+    <p class="section-lede cap reveal" style="--reveal-delay:80ms">Campfire is Hyde&rsquo;s platform for training, fine-tuning, and deploying your own specialist models.</p>
+    <span class="chip chip--grey eyebrow cap reveal" style="--reveal-delay:80ms">hyde&rsquo;s platform</span>
+
+    <div class="campfire__tabs reveal" style="--reveal-delay:160ms" role="tablist" aria-label="Campfire capabilities">
+      <button class="campfire__tab is-active" role="tab" aria-selected="true" aria-controls="cf-pane-0" id="cf-tab-0">
+        <span class="campfire__tab-index cap">1.0</span>
+        <span class="campfire__tab-title cap">Infrastructure</span>
+      </button>
+      <button class="campfire__tab" role="tab" aria-selected="false" aria-controls="cf-pane-1" id="cf-tab-1">
+        <span class="campfire__tab-index cap">2.0</span>
+        <span class="campfire__tab-title cap">Training</span>
+      </button>
+      <button class="campfire__tab" role="tab" aria-selected="false" aria-controls="cf-pane-2" id="cf-tab-2">
+        <span class="campfire__tab-index cap">3.0</span>
+        <span class="campfire__tab-title cap">Evals</span>
+      </button>
+      <button class="campfire__tab" role="tab" aria-selected="false" aria-controls="cf-pane-3" id="cf-tab-3">
+        <span class="campfire__tab-index cap">4.0</span>
+        <span class="campfire__tab-title cap">Learning</span>
+      </button>
+    </div>
+
+    <div class="campfire__panel reveal" style="--reveal-delay:200ms">
+      <div class="campfire__pane is-active" id="cf-pane-0" role="tabpanel" aria-labelledby="cf-tab-0">
+        <h3 class="campfire__title cap">Your Cloud or Hyde's Cloud: You Choose</h3>
+        <div class="campfire__timeline"><div class="campfire__progress"></div></div>
+        <div class="campfire__copy">
+          <div class="campfire__row">
+            <span class="campfire__marker cap">1.1</span>
+            <p class="cap">Campfire ships as a CLI-tool that plugs into your existing cloud infrastructure and works with all major data-lake platforms.</p>
+          </div>
+          <div class="campfire__row">
+            <span class="campfire__marker cap">1.2</span>
+            <p class="cap">For teams that want to forget about DevOps, Campfire can handle infrastructure provisioning across dedicated reserved or shared on-demand GPU capacity.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="campfire__pane" id="cf-pane-1" role="tabpanel" aria-labelledby="cf-tab-1" hidden>
+        <h3 class="campfire__title cap">Automate The Full Training Arc</h3>
+        <div class="campfire__timeline"><div class="campfire__progress"></div></div>
+        <div class="campfire__copy">
+          <div class="campfire__row">
+            <span class="campfire__marker cap">2.1</span>
+            <p class="cap">Campfire lets you build your evaluation environments from your own tasks to allow models to reflect what accuracy means for your company.</p>
+          </div>
+          <div class="campfire__row">
+            <span class="campfire__marker cap">2.2</span>
+            <p class="cap">Campfire lets you automate the full arc of model training and deployment through a guided dashboard or a single command.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="campfire__pane" id="cf-pane-2" role="tabpanel" aria-labelledby="cf-tab-2" hidden>
+        <h3 class="campfire__title cap">Eval-Based Deployment</h3>
+        <div class="campfire__timeline"><div class="campfire__progress"></div></div>
+        <div class="campfire__copy">
+          <div class="campfire__row">
+            <span class="campfire__marker cap">3.1</span>
+            <p class="cap">Campfire lets you evaluate and track every single training checkpoint run against both public and custom benchmarks.</p>
+          </div>
+          <div class="campfire__row">
+            <span class="campfire__marker cap">3.2</span>
+            <p class="cap">Campfire ships with built in support for A/B testing and easy rollbacks, enabling you to deploy models with confidence.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="campfire__pane" id="cf-pane-3" role="tabpanel" aria-labelledby="cf-tab-3" hidden>
+        <h3 class="campfire__title cap">Continual Learning Made Possible</h3>
+        <div class="campfire__timeline"><div class="campfire__progress"></div></div>
+        <div class="campfire__copy">
+          <div class="campfire__row">
+            <span class="campfire__marker cap">4.1</span>
+            <p class="cap">Campfire excels at ingesting data from production deployments to improve benchmarks and re-train models.</p>
+          </div>
+          <div class="campfire__row">
+            <span class="campfire__marker cap">4.2</span>
+            <p class="cap">Your model becomes a continually improving asset, enabling you to widen the gap between your specialist models and off-the-shelf APIs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="campfire__stage reveal" style="--reveal-delay:240ms">
+      <div class="campfire__frames">
+        <!-- Each illustration is an HTML animation with its own background.
+             data-anim is loaded into the iframe the first time its tab opens;
+             the still in data-still renders until then (and if it 404s). -->
+        <div class="campfire__frame is-active" data-anim="assets/campfire/01-infrastructure.html">
+          <img src="assets/campfire/01-infrastructure.jpg" alt="" width="959" height="598">
+          <p class="campfire__caption">+ ephemeral environment
++ infrastructure provisioning</p>
+        </div>
+        <div class="campfire__frame" data-anim="assets/campfire/02-training.html">
+          <img src="assets/campfire/02-training.jpg" alt="" width="959" height="598">
+          <p class="campfire__caption">+ custom evaluation environments
++ full arc of model training</p>
+        </div>
+        <div class="campfire__frame" data-anim="assets/campfire/03-evals.html">
+          <img src="assets/campfire/03-evals.jpg" alt="" width="959" height="598">
+          <p class="campfire__caption">+ evaluate and track training
++ ships with built in support for A/B testing</p>
+        </div>
+        <div class="campfire__frame" data-anim="assets/campfire/04-learning.html">
+          <img src="assets/campfire/04-learning.jpg" alt="" width="959" height="598">
+          <p class="campfire__caption">+ ingesting data from production deployments
++ continually improving asset</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       INDUSTRIES — draggable carousel, header 2550, cards 2674
+       ==================================================================== -->
+  <section class="section section--industries" id="industries" data-bg="light">
+    <div class="header-block"></div>
+    <h2 class="h2 cap reveal">Industries</h2>
+    <p class="section-lede cap reveal" style="--reveal-delay:80ms">Specialist models trained on institutional context that off-the-shelf frontier models never see.</p>
+    <span class="chip chip--grey eyebrow cap reveal" style="--reveal-delay:80ms">hyde&rsquo;s reach</span>
+
+    <div class="industries__viewport reveal" style="--reveal-delay:160ms">
+      <div class="industries__track" id="ind-track">
+
+        <article class="card industries__card" style="left:0">
+          <div class="card__media"><img src="assets/industries/financial-services.jpg" alt="" width="524" height="500"></div>
+          <div class="card__overlay card__overlay--strong"></div>
+          <div class="card__overlay card__overlay--hover"></div>
+          <span class="card-index cap">1.</span>
+          <h3 class="card__title ind__title cap">Financial Services</h3>
+          <div class="ind__chips">
+            <span class="chip chip--ghost cap">Compliance</span>
+            <span class="chip chip--ghost cap">Legacy Data Governance</span>
+            <span class="chip chip--ghost cap">Data Privacy Markings</span>
+          </div>
+          <p class="card__copy ind__copy cap">A major national US stock exchange encoded its SEC regulatory expertise into a specialist model. The model now answers complex queries and completes detailed regulatory workflows with near complete accuracy - work that previously took weeks of analyst time.</p>
+          <a class="card-link ind__link cap" href="#">Read the case study&nbsp;↗</a>
+        </article>
+
+        <article class="card industries__card" style="left:523px">
+          <div class="card__media"><img src="assets/industries/retail-cpg.jpg" alt="" width="524" height="500"></div>
+          <div class="card__overlay card__overlay--strong"></div>
+          <div class="card__overlay card__overlay--hover"></div>
+          <span class="card-index cap">2.</span>
+          <h3 class="card__title ind__title cap">Retail &amp; CPG</h3>
+          <div class="ind__chips">
+            <span class="chip chip--ghost cap">Agentic Demand Forecasting</span>
+            <span class="chip chip--ghost cap">Customer Simulations</span>
+          </div>
+          <p class="card__copy ind__copy cap">A $10B+ retail giant used purpose-built time series foundational models (TSFMs) to generate &gt; 7pps in forecast accuracy improvements compared to legacy approaches, enabling higher operating margins.</p>
+          <a class="card-link ind__link cap" href="#contact">Talk to an engineer&nbsp;↗</a>
+        </article>
+
+        <article class="card industries__card" style="left:1046px">
+          <div class="card__media"><img src="assets/industries/defense.jpg" alt="" width="524" height="500"></div>
+          <div class="card__overlay card__overlay--strong"></div>
+          <div class="card__overlay card__overlay--hover"></div>
+          <span class="card-index cap">3.</span>
+          <h3 class="card__title ind__title cap">Defense</h3>
+          <div class="ind__chips">
+            <span class="chip chip--ghost cap">Sustainment &amp; Readiness Intelligence</span>
+            <span class="chip chip--ghost cap">Air-Gapped Deployments</span>
+          </div>
+          <p class="card__copy ind__copy cap">A major government agency is working with Hyde to deploy specialist AI models on-prem in an air-gapped deployment, giving end users sovereign inference endpoints on reasoning models trained on 30+ years of proprietary data.</p>
+          <a class="card-link ind__link cap" href="#campfire">explore campfire&nbsp;↗</a>
+        </article>
+
+      </div>
+    </div>
+
+    <button class="industries__arrow industries__arrow--prev" id="ind-prev" aria-label="Previous industry" hidden>
+      <svg viewBox="0 0 37 37" fill="none" aria-hidden="true"><path d="M1 1H36V36" stroke="#fff" stroke-width="2"/></svg>
+    </button>
+    <button class="industries__arrow industries__arrow--next" id="ind-next" aria-label="Next industry">
+      <svg viewBox="0 0 37 37" fill="none" aria-hidden="true"><path d="M1 1H36V36" stroke="#fff" stroke-width="2"/></svg>
+    </button>
+
+    <div class="industries__dots" id="ind-dots" role="tablist" aria-label="Industries"></div>
+  </section>
+
+  <!-- ====================================================================
+       CAREERS — header 3251, logo strip 3413, list 3472
+       ==================================================================== -->
+  <section class="section section--careers" id="careers" data-bg="light">
+    <div class="header-block header-block--tall"></div>
+    <h2 class="h2 cap reveal">Careers</h2>
+    <p class="section-lede cap reveal" style="--reveal-delay:80ms">Come solve the most interesting problems for the world&rsquo;s most consequential organizations.</p>
+    <span class="chip chip--grey eyebrow cap reveal" style="--reveal-delay:80ms">build with hyde</span>
+    <a class="btn btn--outline-black careers__cta cap reveal" style="--reveal-delay:120ms" href="#careers">view all open positions&nbsp;↗</a>
+
+    <!-- Same fixed-frame marquee as the hero, drifting the other way -->
+    <div class="logostrip logostrip--careers reveal" style="top:162px; --reveal-delay:160ms">
+      <div class="logostrip__viewport">
+        <div class="logostrip__track" data-marquee="right" data-speed="55">
+          <div class="logostrip__tile"><img src="assets/careers/palantir.svg" alt="Palantir" width="85" height="20"></div>
+          <div class="logostrip__tile"><img src="assets/careers/optiver.svg" alt="Optiver" width="93.5" height="19.42"></div>
+          <div class="logostrip__tile"><img src="assets/careers/deepmind.svg" alt="Google DeepMind" width="144" height="18"></div>
+          <div class="logostrip__tile"><img src="assets/careers/tower.svg" alt="Tower" width="84.87" height="17.26"></div>
+          <div class="logostrip__tile"><img src="assets/careers/mckinsey.svg" alt="McKinsey &amp; Company" width="99.25" height="30.92"></div>
+          <div class="logostrip__tile"><img src="assets/careers/kkr.svg" alt="KKR" width="63.54" height="15.39"></div>
+        </div>
+      </div>
+      <div class="logostrip__frame" aria-hidden="true">
+        <span class="logostrip__cell" style="width:183px"></span>
+        <span class="logostrip__cell" style="width:184px"></span>
+        <span class="logostrip__cell" style="width:184px"></span>
+        <span class="logostrip__cell" style="width:184px"></span>
+        <span class="logostrip__cell" style="width:184px"></span>
+        <span class="logostrip__cell" style="width:184px"></span>
+        <span class="logostrip__cell" style="width:183px"></span>
+      </div>
+      <p class="logostrip__label cap">built by
+the top minds</p>
+    </div>
+
+    <div class="careers__list reveal" style="--reveal-delay:200ms">
+      <a class="job" href="#" style="top:10px">
+        <span class="job__index cap" style="top:10px">1.0</span>
+        <h3 class="job__title cap" style="top:27px">AI Builder - FDE, Research, &amp; Product (NYC)</h3>
+        <span class="job__tags" style="top:24px">
+          <span class="chip chip--grey cap">Engineering</span>
+          <span class="chip chip--grey cap">New York City</span>
+          <span class="chip chip--grey cap">Full time</span>
+          <span class="chip chip--grey cap">On-site</span>
+          <span class="chip chip--grey chip--arrow cap">↗</span>
+        </span>
+      </a>
+      <a class="job" href="#" style="top:81px">
+        <span class="job__rule" style="top:0"></span>
+        <span class="job__index cap" style="top:10px">2.0</span>
+        <h3 class="job__title cap" style="top:27px">AI Builder - Research (Mumbai)</h3>
+        <span class="job__tags" style="top:24px">
+          <span class="chip chip--grey cap">Engineering</span>
+          <span class="chip chip--grey cap">mumbai</span>
+          <span class="chip chip--grey cap">Full time</span>
+          <span class="chip chip--grey cap">On-site</span>
+          <span class="chip chip--grey chip--arrow cap">↗</span>
+        </span>
+      </a>
+      <a class="job" href="#" style="top:156px">
+        <span class="job__rule" style="top:0"></span>
+        <span class="job__index cap" style="top:10px">3.0</span>
+        <h3 class="job__title cap" style="top:27px">AI Builder (London)</h3>
+        <span class="job__tags" style="top:24px">
+          <span class="chip chip--grey cap">Engineering</span>
+          <span class="chip chip--grey cap">london</span>
+          <span class="chip chip--grey cap">Full time</span>
+          <span class="chip chip--grey cap">hybrid</span>
+          <span class="chip chip--grey chip--arrow cap">↗</span>
+        </span>
+      </a>
+      <a class="job" href="#" style="top:231px">
+        <span class="job__rule" style="top:0"></span>
+        <span class="job__index cap" style="top:10px">4.0</span>
+        <h3 class="job__title cap" style="top:27px">Enterprise Account Executive (Mumbai)</h3>
+        <span class="job__tags" style="top:24px">
+          <span class="chip chip--grey cap">gtm</span>
+          <span class="chip chip--grey cap">mumbai</span>
+          <span class="chip chip--grey cap">Full time</span>
+          <span class="chip chip--grey cap">on-site</span>
+          <span class="chip chip--grey chip--arrow cap">↗</span>
+        </span>
+      </a>
+      <a class="job" href="#" style="top:306px">
+        <span class="job__rule" style="top:0"></span>
+        <span class="job__index cap" style="top:10px">5.0</span>
+        <h3 class="job__title cap" style="top:27px">Enterprise Account Executive (NYC)</h3>
+        <span class="job__tags" style="top:24px">
+          <span class="chip chip--grey cap">gtm</span>
+          <span class="chip chip--grey cap">New York City</span>
+          <span class="chip chip--grey cap">Full time</span>
+          <span class="chip chip--grey cap">on-site</span>
+          <span class="chip chip--grey chip--arrow cap">↗</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       BLOG — header 3893, cards 4055
+       ==================================================================== -->
+  <section class="section section--blog" id="blog" data-bg="light">
+    <div class="header-block header-block--tall"></div>
+    <h2 class="h2 cap reveal">Blog</h2>
+    <p class="section-lede cap reveal" style="--reveal-delay:80ms">Research, engineering notes, and field observations from the work of building models for institutions.</p>
+    <span class="chip chip--grey eyebrow cap reveal" style="--reveal-delay:80ms">Hyde's latest updates</span>
+    <a class="btn btn--outline-black blog__cta cap reveal" style="--reveal-delay:120ms" href="#blog">view all blog posts&nbsp;↗</a>
+
+    <article class="card blog__card--one reveal" style="--reveal-delay:160ms">
+      <div class="card__media"><img src="assets/blog/manifesto.jpg" alt="" width="641" height="500"></div>
+      <div class="card__overlay card__overlay--strong"></div>
+      <div class="card__overlay card__overlay--hover"></div>
+      <span class="card-index cap">1.</span>
+      <div class="blog__chips">
+        <span class="chip chip--solid cap">featured article</span>
+        <span class="chip chip--ghost cap">company</span>
+      </div>
+      <h3 class="card__title blog__title cap">Hyde&rsquo;s Manifesto.<br>Own your Intelligence</h3>
+      <div class="blog__meta">
+        <span class="chip chip--ghost cap">Anirudh Sanga</span>
+        <span class="chip chip--ghost cap">March 31, 2026</span>
+        <span class="chip chip--ghost cap">3 min read</span>
+      </div>
+      <p class="card__copy blog__copy cap">Hyde turns proprietary enterprise data into specialist AI that learns, works, and improves in production. This matters because the companies that own their intelligence will outperform the ones that rent it...</p>
+      <a class="card-link blog__link cap" href="#">Read full article&nbsp;↗</a>
+    </article>
+
+    <article class="card blog__card--two reveal" style="--reveal-delay:240ms">
+      <div class="card__media"><img src="assets/blog/great-migration.jpg" alt="" width="640" height="500"></div>
+      <div class="card__overlay card__overlay--strong"></div>
+      <div class="card__overlay card__overlay--hover"></div>
+      <span class="card-index cap">2.</span>
+      <div class="blog__chips">
+        <span class="chip chip--solid cap">latest article</span>
+        <span class="chip chip--ghost cap">company</span>
+      </div>
+      <h3 class="card__title blog__title cap">The Great Migration:<br>Moving beyond the frontier<br>to owning your intelligence</h3>
+      <div class="blog__meta">
+        <span class="chip chip--ghost cap">Anirudh Sanga and Sneha Dhawan</span>
+        <span class="chip chip--ghost cap">July 17, 2026</span>
+        <span class="chip chip--ghost cap">5 min read</span>
+      </div>
+      <p class="card__copy blog__copy cap">Enterprises deploying AI today are quickly realizing that the future isn't renting a general-purpose frontier model that every competitor can rent. It's owning smaller, specialist models trained on your organization's data...</p>
+      <a class="card-link blog__link cap" href="#">Read full article&nbsp;↗</a>
+    </article>
+  </section>
+
+  <!-- ====================================================================
+       FOOTER — 1440 × 900, #f7f7f7
+       ==================================================================== -->
+  <section class="section section--footer" id="contact" data-bg="light">
+    <div class="footer__bg"></div>
+
+    <a class="btn btn--accent footer__cta-primary cap reveal" href="#contact">Talk to an engineer</a>
+    <a class="btn btn--outline-black footer__cta-secondary cap reveal" style="--reveal-delay:80ms" href="#blog">Read the blog</a>
+
+    <nav class="footer__col footer__col--site reveal" style="--reveal-delay:80ms" aria-label="Site">
+      <span class="footer__col-rule"></span>
+      <h2 class="footer__col-heading cap">Site</h2>
+      <ul class="footer__links cap">
+        <li><a href="#top">Home</a></li>
+        <li><a href="#campfire">Platform</a></li>
+        <li><a href="#industries">Industries</a></li>
+      </ul>
+    </nav>
+
+    <nav class="footer__col footer__col--company reveal" style="--reveal-delay:120ms" aria-label="Company">
+      <span class="footer__col-rule"></span>
+      <h2 class="footer__col-heading cap">Company</h2>
+      <ul class="footer__links cap">
+        <li><a href="#careers">Careers</a></li>
+        <li><a href="#blog">Blog</a></li>
+      </ul>
+    </nav>
+
+    <nav class="footer__col footer__col--connect reveal" style="--reveal-delay:160ms" aria-label="Connect">
+      <span class="footer__col-rule"></span>
+      <h2 class="footer__col-heading cap">Connect</h2>
+      <ul class="footer__links cap">
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">X</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer__certs reveal" style="--reveal-delay:200ms">
+      <span class="footer__col-rule"></span>
+      <h2 class="footer__col-heading cap">Certifications</h2>
+      <div class="footer__badges">
+        <img src="assets/certifications/soc2.svg" alt="SOC 2 Type I certified" width="80" height="33">
+        <img src="assets/certifications/hipaa.svg" alt="HIPAA compliant" width="70" height="33">
+      </div>
+    </div>
+
+    <span class="footer__mark">
+      <img src="assets/logo/hyde-mark-outline.svg" alt="" width="191" height="220">
+    </span>
+    <span class="footer__wordmark">
+      <img src="assets/logo/hyde-wordmark-outline.svg" alt="" width="632" height="254">
+    </span>
+
+    <a class="footer__legal footer__legal--privacy cap" href="#">Privacy Policy</a>
+    <a class="footer__legal footer__legal--terms cap" href="#">Terms of Service</a>
+    <a class="footer__legal footer__legal--sla cap" href="#">Service Level Agreement</a>
+    <p class="footer__legal footer__legal--copy cap">© 2026 Hyde Inc. All rights reserved.</p>
+  </section>
+
+</main>
+
+<script src="scripts/main.js"></script>
+</body>
+</html>

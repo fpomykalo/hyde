@@ -1,0 +1,59 @@
+/* ==========================================================================
+   Hyde — design tokens
+   Every value here is lifted directly from the Figma file
+   "Hyde — Web" › page "Page 4.2" › frame "Desktop" (1440 × 5505).
+   ========================================================================== */
+
+/* --- Typefaces -----------------------------------------------------------
+   New Science and Neue Montreal are licensed faces and are not on any CDN.
+   Drop the woff2 files into assets/fonts/ (see assets/README.md) and these
+   rules pick them up. Until then the fallback stack renders.
+   ------------------------------------------------------------------------ */
+
+@font-face {
+  font-family: "New Science";
+  src: url("../assets/fonts/NewScience-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("../assets/fonts/NeueMontreal-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Type stacks */
+  --font-display: "New Science", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: "Neue Montreal", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Colour */
+  --black: #000000;
+  --white: #ffffff;
+  --accent: #2bbfab;           /* Contact button, hover CTAs, footer CTA      */
+  --hairline: #e5e5e5;         /* every 1px rule and section border           */
+  --chip-fill: rgba(0, 0, 0, 0.1);   /* eyebrow + metadata chips on light     */
+  --ink-20: rgba(0, 0, 0, 0.2);      /* section intro paragraphs              */
+  --ink-30: rgba(0, 0, 0, 0.3);      /* active campfire tab index             */
+  --ink-40: rgba(0, 0, 0, 0.4);      /* campfire body copy + 1.1/1.2 markers  */
+  --footer-bg: #f7f7f7;
+  --footer-heading: #413d3c;
+  --dot-idle: #d9d9d9;         /* carousel pagination, inactive              */
+
+  /* Canvas */
+  --canvas-w: 1440px;
+  --gutter: 80px;              /* content runs 80 → 1360                      */
+  --content-w: 1280px;
+  --pad: 20px;                 /* inner padding inside every bordered block   */
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --reveal-dur: 900ms;
+  --hover-dur: 500ms;
+  --campfire-tab-ms: 7000;     /* read by scripts/main.js                     */
+}

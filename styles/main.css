@@ -1,0 +1,1226 @@
+/* ==========================================================================
+   Hyde — desktop (v01)
+
+   Layout model
+   ------------
+   The Figma desktop frame is a 1440 × 5505 canvas. This stylesheet keeps that
+   canvas 1:1: the page is a fixed 1440px column centred in the viewport, each
+   section is a block of the exact height Figma gives it, and everything inside
+   a section is absolutely positioned at its exact offset from that section's
+   top-left corner. Section tops therefore land on the Figma y-coordinates:
+
+     hero        0     h 900     footer  4605   h 900
+     two paths   1053  h 623
+     campfire    1725  h 776
+     industries  2550  h 651
+     careers     3251  h 592
+     blog        3893  h 662
+
+   Text boxes are cap-height trimmed (as Figma trims them), so a `top` value
+   here is the top of the capital letters, not the top of the line box.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--white);
+}
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Trim the line box down to the cap height, the way Figma measures text. */
+.cap {
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+  text-box: trim-both cap alphabetic;
+}
+
+/* --------------------------------------------------------------------------
+   Canvas
+   -------------------------------------------------------------------------- */
+
+.page {
+  position: relative;
+  width: var(--canvas-w);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.section {
+  position: relative;
+  width: var(--canvas-w);
+}
+
+.section--hero       { height: 900px; }
+.section--paths      { height: 623px; margin-top: 153px; }
+.section--campfire   { height: 776px; margin-top: 49px; }
+.section--industries { height: 651px; margin-top: 49px; }
+.section--careers    { height: 592px; margin-top: 50px; }
+.section--blog       { height: 662px; margin-top: 50px; }
+.section--footer     { height: 900px; margin-top: 50px; }
+
+/* --------------------------------------------------------------------------
+   Shared type roles
+   -------------------------------------------------------------------------- */
+
+/* Section H2 — New Science Medium 60/80, -1.2 tracking */
+.h2 {
+  position: absolute;
+  left: 100px;
+  top: 20px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 60px;
+  line-height: 80px;
+  letter-spacing: -1.2px;
+  color: var(--black);
+  white-space: nowrap;
+}
+
+/* Section intro paragraph — sits in the right half of the header block */
+.section-lede {
+  position: absolute;
+  left: 728px;
+  top: 25px;
+  width: 466px;
+  margin: 0;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.6px;
+  color: var(--ink-20);
+}
+
+/* The 1280 × 124 (or 163) bordered header block behind every section title */
+.header-block {
+  position: absolute;
+  left: var(--gutter);
+  top: 0;
+  width: var(--content-w);
+  height: 124px;
+  border: 1px solid var(--hairline);
+}
+
+.header-block--tall { height: 163px; }
+
+/* Chip — IBM Plex Mono Medium 10/1px tracking, 10px × 7px padding.
+   Three fills: grey (on light), outlined white (on imagery), solid white. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 7px 10px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  /* text-box-trim does not apply to a flex container, so the line box is set
+     to the font's cap height directly. 7 + 7 + 7 = the 21px chip Figma draws. */
+  line-height: 7px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Figma draws strokes inside the frame, so outlines are inset shadows rather
+   than borders — a border would add 2px to every chip and button. */
+.chip--grey   { background: var(--chip-fill); color: var(--black); }
+.chip--ghost  { box-shadow: inset 0 0 0 1px var(--white); color: var(--white); }
+.chip--solid  { background: var(--white); color: var(--black); }
+
+/* The eyebrow chip that sits under every section title */
+.eyebrow {
+  position: absolute;
+  left: 100px;
+  top: 83px;
+}
+
+/* Button — IBM Plex Mono Regular 14/0.42 tracking, 20px × 15px padding.
+   Cap trimming makes these exactly 40px tall, as in Figma. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 20px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 10px;   /* cap height → 15 + 10 + 15 = the 40px button */
+  letter-spacing: 0.42px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--hover-dur) var(--ease-out),
+              color var(--hover-dur) var(--ease-out),
+              box-shadow var(--hover-dur) var(--ease-out);
+}
+
+.btn--outline-black { box-shadow: inset 0 0 0 1px var(--black); color: var(--black); }
+.btn--outline-white { box-shadow: inset 0 0 0 1px var(--white); color: var(--white); }
+.btn--accent        { background: var(--accent); color: var(--white); }
+
+.btn--outline-black:hover { background: var(--black); color: var(--white); }
+
+/* Small underlined mono link used at the foot of every image card */
+.card-link {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-position: from-font;
+  color: var(--white);
+}
+
+/* Index marker ("1.", "2.") in the top-right of an image card.
+   641/640-wide cards inset it 21px (Figma 4.2% / 3.28%); the 524-wide
+   Industries cards inset it 20px. */
+.card-index {
+  position: absolute;
+  top: 21px;
+  right: 21px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--white);
+}
+
+/* --------------------------------------------------------------------------
+   Image cards — shared by "Two Paths", "Industries" and "Blog"
+
+   Default overlay and hover overlay both come straight from the Figma
+   component variants (Property 1=Default / Property 1=Variant2):
+     default  180deg  0.4 @3%  →  0 @50%  →  0.4 @97%
+     hover    180deg  0.8 @3%  →  0 @50%  →  0.8 @97%   + flat 0.6 black
+   Industries and Blog cards ship with the 0.8 gradient already applied.
+   On hover the artwork scales 1.0857 (Figma: 104.47% → 113.42% width).
+   -------------------------------------------------------------------------- */
+
+/* A 1px CSS border would inset the containing block and push every absolutely
+   positioned child 1px in, so containers that hold positioned children draw
+   their hairline as a pseudo-element instead. Child offsets then match the
+   Figma coordinates exactly. */
+.card::after,
+.campfire__tab::after,
+.campfire__panel::after,
+.campfire__stage::after,
+.careers__list::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--hairline);
+  pointer-events: none;
+}
+
+.card {
+  position: absolute;
+  overflow: hidden;
+  color: var(--white);
+}
+
+.card__media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #4a4a4a;
+}
+
+.card__media img,
+.card__media .asset {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1);
+  transition: transform 700ms var(--ease-out);
+}
+
+.card:hover .card__media img,
+.card:hover .card__media .asset {
+  transform: scale(1.0857);
+}
+
+.card__overlay {
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  transition: opacity var(--hover-dur) var(--ease-out);
+}
+
+.card__overlay--base {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.4) 3%,
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 0.4) 97%
+  );
+}
+
+/* Industries + Blog sit at 0.8 by default */
+.card__overlay--strong {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.8) 3%,
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 0.8) 97%
+  );
+}
+
+.card__overlay--hover {
+  opacity: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.8) 3%,
+      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 0.8) 97%
+    ),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.card:hover .card__overlay--hover { opacity: 1; }
+
+/* Card title — Neue Montreal 40/40 */
+.card__title {
+  position: absolute;
+  margin: 0;
+  font-size: 40px;
+  line-height: 40px;
+  color: var(--white);
+}
+
+/* Card paragraph — Neue Montreal 14/18, 0.42 tracking */
+.card__copy {
+  position: absolute;
+  margin: 0;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.42px;
+  color: var(--white);
+}
+
+/* The 7px dot inside a card chip: a ring by default, filled on hover */
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  flex: none;
+  transition: background-color var(--hover-dur) var(--ease-out);
+}
+
+.card:hover .dot { background: currentColor; }
+
+/* --------------------------------------------------------------------------
+   Navigation
+   -------------------------------------------------------------------------- */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--canvas-w);
+  height: 53px;
+  z-index: 100;
+}
+
+.nav__logo {
+  position: absolute;
+  left: 80px;
+  top: 19px;
+  width: 105px;
+  height: 31px;
+}
+
+/* Both logo colourways are stacked; the active theme cross-fades between them,
+   so the mark flips black/white with the background underneath the bar. */
+.nav__logo img,
+.nav__logo .asset {
+  position: absolute;
+  inset: 0;
+  width: 105px;
+  height: 31px;
+  transition: opacity 400ms var(--ease-out);
+}
+
+.nav__logo .logo--light { opacity: 1; }  /* white mark, for dark backgrounds */
+.nav__logo .logo--dark  { opacity: 0; }  /* black mark, for light backgrounds */
+
+.nav.is-light .nav__logo .logo--light { opacity: 0; }
+.nav.is-light .nav__logo .logo--dark  { opacity: 1; }
+
+.nav__item {
+  position: absolute;
+  top: 15px;
+  width: 124px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 25px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 10px;   /* cap height → 14 + 10 + 14 = the 38px nav item */
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color 400ms var(--ease-out),
+              color 400ms var(--ease-out),
+              box-shadow 400ms var(--ease-out);
+}
+
+.nav__item--platform   { left: 728px; }
+.nav__item--industries { left: 851px; }
+.nav__item--careers    { left: 974px; }
+.nav__item--blog       { left: 1097px; }
+.nav__item--contact    { left: 1236px; }
+
+/* Over the dark hero */
+.nav__item {
+  box-shadow: inset 0 0 0 1px var(--white);
+  background: transparent;
+  color: var(--white);
+}
+
+.nav__item--contact {
+  box-shadow: inset 0 0 0 1px var(--accent);
+  color: var(--accent);
+  background: transparent;
+}
+
+/* Over light sections */
+.nav.is-light .nav__item {
+  box-shadow: inset 0 0 0 1px var(--black);
+  background: var(--white);
+  color: var(--black);
+}
+
+.nav.is-light .nav__item--contact {
+  box-shadow: inset 0 0 0 1px var(--accent);
+  background: var(--accent);
+  color: var(--white);
+}
+
+.nav__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+/* Ground colours behind every image slot. They are covered completely once the
+   artwork is in assets/, and until then they keep the white type legible
+   instead of leaving the section blank. */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #262d34;
+}
+
+.hero__bg img,
+.hero__bg .asset {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero__rule {
+  position: absolute;
+  left: 80px;
+  top: 73px;
+  width: 1280px;
+  height: 1px;
+  background: var(--white);
+}
+
+.hero__eyebrow {
+  position: absolute;
+  left: 80px;
+  top: 93px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+/* Display lines — New Science Medium 133/115, -3.99 tracking */
+.hero__line {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 133px;
+  line-height: 115px;
+  letter-spacing: -3.99px;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.hero__line--one { left: 79px; top: 123px; }
+.hero__line--two { left: 649px; top: 674px; width: 711px; text-align: right; }
+
+.hero__lede {
+  position: absolute;
+  left: 80px;
+  top: 684px;
+  width: 423px;
+  margin: 0;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.6px;
+  color: var(--white);
+}
+
+/* --------------------------------------------------------------------------
+   Logo strip — used by the hero ("our partners") and Careers ("built by")
+
+   The 7-cell frame is fixed. Cell 1 is the label; cells 2–7 form a single
+   masked viewport (1098px wide) that a duplicated track of 183px tiles drifts
+   through, so extra logos simply extend the track.
+   -------------------------------------------------------------------------- */
+
+.logostrip {
+  position: absolute;
+  left: 80px;
+  width: 1280px;
+  height: 60px;
+}
+
+.logostrip__viewport {
+  position: absolute;
+  left: 182px;
+  top: 0;
+  width: 1098px;
+  height: 60px;
+  overflow: hidden;
+}
+
+.logostrip__track {
+  display: flex;
+  height: 100%;
+  width: max-content;
+  will-change: transform;
+}
+
+.logostrip__tile {
+  width: 183px;
+  height: 60px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Each logo keeps its own Figma width/height — set inline per tile. */
+.logostrip__tile img,
+.logostrip__tile .asset {
+  display: block;
+  object-fit: contain;
+}
+
+/* The fixed cell frame, painted over the moving track */
+.logostrip__frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+}
+
+.logostrip__cell {
+  height: 60px;
+  border: 1px solid currentColor;
+  margin-left: -1px;
+  flex: none;
+}
+
+.logostrip__cell:first-child { margin-left: 0; }
+
+.logostrip__label {
+  position: absolute;
+  left: 19px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  text-transform: uppercase;
+  white-space: pre-line;
+}
+
+/* Hero variant — white frame, single-line label */
+.logostrip--hero { color: var(--white); }
+
+.logostrip--hero .logostrip__label {
+  top: 25px;
+  font-size: 14px;
+  letter-spacing: 1.4px;
+  color: var(--white);
+}
+
+/* Careers variant — hairline frame, two-line label */
+.logostrip--careers { color: var(--hairline); }
+
+.logostrip--careers .logostrip__label {
+  top: 16px;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.42px;
+  color: var(--black);
+}
+
+/* --------------------------------------------------------------------------
+   Two Paths to Specialist AI
+   -------------------------------------------------------------------------- */
+
+.paths__card--one { left: 80px;  top: 123px; width: 641px; height: 500px; }
+.paths__card--two { left: 720px; top: 123px; width: 640px; height: 500px; }
+
+.paths__chip  { position: absolute; left: 21px; top: 21px; }
+.paths__title { left: 21px; top: 62px; }
+.paths__copy  {
+  position: absolute;
+  left: 21px;
+  top: 111px;
+  margin: 0;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.6px;
+  color: var(--white);
+}
+.paths__btn   { position: absolute; left: 21px; top: 439px; }
+
+/* Card CTA flips from outlined-white to solid accent on hover */
+.card:hover .paths__btn {
+  background: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  color: var(--white);
+}
+
+/* Card chip flips from outlined-white to solid white on hover */
+.card:hover .paths__chip {
+  background: var(--white);
+  box-shadow: inset 0 0 0 1px var(--white);
+  color: var(--black);
+}
+
+/* --------------------------------------------------------------------------
+   Campfire
+   -------------------------------------------------------------------------- */
+
+.campfire__mark {
+  position: absolute;
+  left: 371px;
+  top: 20px;
+  width: 72px;
+  height: 43px;
+}
+
+.campfire__tabs {
+  position: absolute;
+  left: 80px;
+  top: 123px;
+  width: 1280px;
+  height: 54px;
+}
+
+.campfire__tab {
+  position: absolute;
+  top: 0;
+  height: 54px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  transition: background-color 400ms var(--ease-out);
+}
+
+.campfire__tab:nth-child(1) { left: 0;     width: 321px; }
+.campfire__tab:nth-child(2) { left: 320px; width: 321px; }
+.campfire__tab:nth-child(3) { left: 640px; width: 320px; }
+.campfire__tab:nth-child(4) { left: 959px; width: 321px; }
+
+/* Selected tab is a solid hairline-grey fill (Figma: Rectangle 14) */
+.campfire__tab.is-active { background: var(--hairline); }
+
+.campfire__tab-index {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-feature-settings: "ss04" 1;
+  color: var(--black);
+}
+
+.campfire__tab.is-active .campfire__tab-index { color: var(--ink-30); }
+
+.campfire__tab-title {
+  position: absolute;
+  left: 60px;
+  top: 20px;
+  font-size: 20px;
+  letter-spacing: 0.6px;
+  color: var(--black);
+}
+
+/* Left text panel */
+.campfire__panel {
+  position: absolute;
+  left: 80px;
+  top: 176px;
+  width: 321px;
+  height: 600px;
+}
+
+.campfire__pane {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 450ms var(--ease-out), visibility 0s linear 450ms;
+}
+
+.campfire__pane.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 450ms var(--ease-out), visibility 0s;
+}
+
+.campfire__pane[hidden] { display: block; }
+
+.campfire__title {
+  position: absolute;
+  left: 20px;
+  top: 21px;
+  width: 288px;
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.6px;
+  color: var(--black);
+}
+
+/* Reading timeline: grey track with a black bar filling across 7s */
+.campfire__timeline {
+  position: absolute;
+  left: 20px;
+  top: 79px;
+  width: 288px;
+  height: 1px;
+  background: var(--hairline);
+}
+
+.campfire__progress {
+  width: 0;
+  height: 100%;
+  background: var(--black);
+  transform-origin: left center;
+}
+
+/* Body copy: a 40px marker column ("1.1") beside a 236px paragraph. The two
+   are baseline-aligned rather than positioned independently, so the marker
+   always sits on its paragraph's first line however the text wraps. */
+.campfire__copy {
+  position: absolute;
+  left: 20px;
+  top: 119px;
+  width: 276px;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.42px;
+  color: var(--ink-40);
+}
+
+.campfire__row {
+  display: flex;
+  align-items: baseline;
+}
+
+/* 18px blank line + the 8px descender the cap trim removes from the row above,
+   which reproduces Figma's 90px gap between 1.1 and 1.2 at any wrap length. */
+.campfire__row + .campfire__row { margin-top: 26px; }
+
+.campfire__marker {
+  width: 40px;
+  flex: none;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-feature-settings: "ss04" 1;
+}
+
+.campfire__row p {
+  width: 236px;
+  margin: 0;
+}
+
+/* Right illustration panel */
+.campfire__stage {
+  position: absolute;
+  left: 400px;
+  top: 176px;
+  width: 961px;
+  height: 600px;
+}
+
+.campfire__frames {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 959px;
+  height: 598px;
+  overflow: hidden;
+  background: #55585c;
+}
+
+.campfire__frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 600ms var(--ease-out), visibility 0s linear 600ms;
+}
+
+.campfire__frame.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 600ms var(--ease-out), visibility 0s;
+}
+
+.campfire__frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.campfire__frame img,
+.campfire__frame .asset {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.campfire__caption {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: pre-line;
+  z-index: 2;
+}
+
+/* --------------------------------------------------------------------------
+   Industries carousel
+   -------------------------------------------------------------------------- */
+
+.industries__viewport {
+  position: absolute;
+  left: 80px;
+  top: 124px;
+  width: 1280px;
+  height: 500px;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.industries__viewport.is-dragging { cursor: grabbing; }
+
+.industries__track {
+  position: relative;
+  height: 500px;
+  will-change: transform;
+  transition: transform 700ms var(--ease-out);
+}
+
+.industries__track.no-anim { transition: none; }
+
+.industries__card {
+  top: 0;
+  width: 524px;
+  height: 500px;
+}
+
+.industries__card .card-index { top: 20px; right: 20px; }
+
+.ind__title { left: 20px; top: 20px; }
+
+.ind__chips {
+  position: absolute;
+  left: 20px;
+  top: 69px;
+  display: flex;
+  gap: 10px;
+}
+
+.ind__copy {
+  left: 20px;
+  bottom: 67px;
+  width: 449px;
+}
+
+.ind__link { left: 20px; top: 473px; }
+
+/* Prev / next chevrons — a 37px right angle rotated 45°, per Figma's Union */
+.industries__arrow {
+  position: absolute;
+  top: 347.84px;
+  width: 52.33px;
+  height: 52.33px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  z-index: 3;
+  opacity: 1;
+  transition: opacity 400ms var(--ease-out);
+}
+
+.industries__arrow[hidden] { display: none; }
+
+.industries__arrow--next { left: 1288.39px; }
+.industries__arrow--prev { left: 99.28px; }
+
+.industries__arrow svg {
+  width: 37px;
+  height: 37px;
+  overflow: visible;
+}
+
+.industries__arrow--next svg { transform: rotate(45deg); }
+.industries__arrow--prev svg { transform: rotate(225deg); }
+
+.industries__dots {
+  position: absolute;
+  left: 691px;
+  top: 644px;
+  display: flex;
+  gap: 10px;
+}
+
+.industries__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  background: var(--dot-idle);
+  cursor: pointer;
+  transition: background-color 300ms var(--ease-out);
+}
+
+.industries__dot.is-active { background: var(--black); }
+
+/* --------------------------------------------------------------------------
+   Careers
+   -------------------------------------------------------------------------- */
+
+.careers__cta { position: absolute; left: 728px; top: 93px; }
+
+.careers__list {
+  position: absolute;
+  left: 80px;
+  top: 221px;
+  width: 1280px;
+  height: 371px;
+}
+
+.job {
+  position: absolute;
+  left: 0;
+  width: 1280px;
+}
+
+.job__rule {
+  position: absolute;
+  left: 20px;
+  width: 1240px;
+  height: 1px;
+  background: var(--hairline);
+}
+
+.job__index {
+  position: absolute;
+  left: 20px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-feature-settings: "ss04" 1;
+  color: var(--black);
+}
+
+.job__title {
+  position: absolute;
+  left: 20px;
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.6px;
+  color: var(--black);
+  white-space: nowrap;
+}
+
+.job__tags {
+  position: absolute;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.job__tags .chip--arrow { padding: 7px; }
+
+/* --------------------------------------------------------------------------
+   Blog
+   -------------------------------------------------------------------------- */
+
+.blog__cta { position: absolute; left: 728px; top: 93px; }
+
+.blog__card--one { left: 80px;  top: 162px; width: 641px; height: 500px; }
+.blog__card--two { left: 720px; top: 162px; width: 640px; height: 500px; }
+
+.blog__chips {
+  position: absolute;
+  left: 20px;
+  top: 21px;
+  display: flex;
+  gap: 10px;
+}
+
+.blog__title { left: 20px; top: 62px; }
+
+.blog__meta {
+  position: absolute;
+  left: 20px;
+  top: 347px;
+  display: flex;
+  gap: 10px;
+}
+
+.blog__copy { left: 20px; bottom: 66px; width: 484px; }
+
+.blog__link { left: 20px; top: 474px; }
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.footer__bg {
+  position: absolute;
+  inset: 0;
+  background: var(--footer-bg);
+}
+
+.footer__cta-primary   { position: absolute; left: 80px; top: 96px; width: 208px; }
+.footer__cta-secondary { position: absolute; left: 80px; top: 151px; width: 155px; }
+
+.footer__col { position: absolute; top: 96px; width: 200px; }
+
+.footer__col--site    { left: 728px; }
+.footer__col--company { left: 944px; }
+.footer__col--connect { left: 1160px; }
+
+.footer__col-rule {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 200px;
+  height: 1px;
+  background: var(--black);
+}
+
+.footer__col-heading {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--footer-heading);
+}
+
+.footer__links {
+  position: absolute;
+  left: 0;
+  top: 38px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: 0.48px;
+  color: var(--black);
+}
+
+.footer__links a { transition: opacity 300ms var(--ease-out); }
+.footer__links a:hover { opacity: 0.5; }
+
+.footer__certs { position: absolute; left: 728px; top: 279px; width: 632px; }
+
+.footer__certs .footer__col-rule { width: 632px; }
+
+.footer__badges {
+  position: absolute;
+  left: 0;
+  top: 38px;
+  width: 162px;
+  height: 33px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.footer__mark {
+  position: absolute;
+  left: 80px;
+  top: 623px;
+  width: 191px;
+  height: 220px;
+}
+
+.footer__wordmark {
+  position: absolute;
+  left: 728px;
+  top: 627px;
+  width: 632px;
+  height: 254px;
+}
+
+.footer__legal {
+  position: absolute;
+  top: 873px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--black);
+}
+
+.footer__legal--privacy { left: 80px; }
+.footer__legal--terms   { left: 227px; }
+.footer__legal--sla     { left: 388px; }
+.footer__legal--copy    { right: 80px; }
+
+/* --------------------------------------------------------------------------
+   Entrance animation
+
+   Hero: the logo, nav, top rule and the "your model. your weights. your
+   advantage." line are present on load. "Stop Renting", "Intelligence.", the
+   lede and the partner strip rise and fade in, in that order. Everything below
+   the fold uses the same treatment as it scrolls into view.
+   -------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.js .reveal {
+  transition: opacity var(--reveal-dur) var(--ease-out),
+              transform var(--reveal-dur) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* No JS: show everything rather than hiding it */
+html:not(.js) .reveal { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .logostrip__track { animation: none !important; transform: none !important; }
+  * { scroll-behavior: auto !important; }
+}
+
+/* --------------------------------------------------------------------------
+   Asset placeholders
+
+   Nothing in assets/ is committed yet — the artwork, logos and animations are
+   uploaded separately (see assets/README.md). Any slot whose file is missing
+   renders as a labelled box at the exact Figma dimensions, so the layout is
+   measured correctly in the meantime. Once a file lands, it just renders.
+   -------------------------------------------------------------------------- */
+
+.asset {
+  display: block;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.04) 0 6px,
+    rgba(0, 0, 0, 0.08) 6px 12px
+  );
+  outline: 1px dashed rgba(0, 0, 0, 0.2);
+  outline-offset: -1px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  color: rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  padding: 4px;
+  word-break: break-all;
+}
+
+/* On dark ground the placeholder inverts so it stays readable */
+.asset--onDark {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.08) 0 6px,
+    rgba(255, 255, 255, 0.16) 6px 12px
+  );
+  outline-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.65);
+}
