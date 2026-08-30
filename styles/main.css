@@ -30,7 +30,16 @@ html {
   background: var(--white);
 }
 
+/* Neue Montreal ships Regular only. Headings default to bold, and a browser
+   asked for a weight it does not have will synthesise one by drawing each
+   glyph twice, slightly offset — which reads as doubled, smeared text and
+   also runs wider. Figma specifies Regular everywhere, so headings are set to
+   400 explicitly and synthesis is switched off as a safety net. */
+h1, h2, h3, h4, h5, h6 { font-weight: 400; }
+
 body {
+  font-synthesis-weight: none;
+  overflow-x: hidden;   /* the hero and footer break out to the full viewport */
   margin: 0;
   background: var(--white);
   color: var(--black);
@@ -59,7 +68,6 @@ a {
   position: relative;
   width: var(--canvas-w);
   margin: 0 auto;
-  overflow: hidden;
 }
 
 .section {
@@ -67,13 +75,19 @@ a {
   width: var(--canvas-w);
 }
 
-.section--hero       { height: 900px; }
+.section--hero,
+.section--footer {
+  width: var(--vw);
+  margin-left: calc(50% - var(--vw) / 2);
+}
+
+.section--hero       { height: 100vh; min-height: 620px; }
 .section--paths      { height: 623px; margin-top: 153px; }
 .section--campfire   { height: 776px; margin-top: 49px; }
 .section--industries { height: 651px; margin-top: 49px; }
 .section--careers    { height: 592px; margin-top: 50px; }
 .section--blog       { height: 662px; margin-top: 50px; }
-.section--footer     { height: 900px; margin-top: 50px; }
+.section--footer     { height: 100vh; min-height: 720px; margin-top: 50px; }
 
 /* --------------------------------------------------------------------------
    Shared type roles
@@ -303,6 +317,7 @@ a {
 .card__title {
   position: absolute;
   margin: 0;
+  font-weight: 400;
   font-size: 40px;
   line-height: 40px;
   color: var(--white);
@@ -334,13 +349,16 @@ a {
    Navigation
    -------------------------------------------------------------------------- */
 
+/* The bar scales with the hero rather than sitting in the 1440 column, so its
+   gutter lines up with the hero's at any width. At 1440 it is Figma exactly. */
 .nav {
   position: fixed;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   width: var(--canvas-w);
   height: 53px;
+  transform: scale(var(--s));
+  transform-origin: top left;
   z-index: 100;
 }
 
@@ -454,6 +472,20 @@ a {
   display: block;
 }
 
+/* Each group keeps the Figma coordinates of a 1440-wide frame and is scaled
+   as a unit — the top pinned to the top of the viewport, the bottom to the
+   bottom. Type and spacing therefore scale together with the window. */
+.hero__top,
+.hero__bottom {
+  position: absolute;
+  left: 0;
+  width: 1440px;
+  transform: scale(var(--s));
+}
+
+.hero__top    { top: 0;    height: 240px; transform-origin: top left; }
+.hero__bottom { bottom: 0; height: 300px; transform-origin: bottom left; }
+
 .hero__rule {
   position: absolute;
   left: 80px;
@@ -490,13 +522,15 @@ a {
   white-space: nowrap;
 }
 
+/* Offsets below are relative to their group: the bottom group starts at y=600
+   of the original 900-tall hero, so 770 becomes 130 up from its bottom edge. */
 .hero__line--one { left: 79px; top: 123px; }
-.hero__line--two { left: 649px; top: 674px; width: 711px; text-align: right; }
+.hero__line--two { right: 80px; bottom: 130px; text-align: right; }
 
 .hero__lede {
   position: absolute;
   left: 80px;
-  top: 684px;
+  bottom: 130px;
   width: 423px;
   margin: 0;
   font-size: 20px;
@@ -506,11 +540,12 @@ a {
 }
 
 /* --------------------------------------------------------------------------
-   Logo strip — used by the hero ("our partners") and Careers ("built by")
+   Logo strip — the hero's "our partners" and Careers' "built by the top minds"
 
-   The 7-cell frame is fixed. Cell 1 is the label; cells 2–7 form a single
-   masked viewport (1098px wide) that a duplicated track of 183px tiles drifts
-   through, so extra logos simply extend the track.
+   One long box with a fixed outer edge. The label is pinned at the left;
+   everything right of it scrolls, and the dividers between logos are carried
+   on the tiles so they travel with the logos rather than sitting still in
+   front of them. Adding logos just extends the track.
    -------------------------------------------------------------------------- */
 
 .logostrip {
@@ -520,13 +555,26 @@ a {
   height: 60px;
 }
 
+.logostrip--hero { bottom: 20px; }
+
+/* Outer box drawn as a ring so it doesn't inset the children */
+.logostrip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid currentColor;
+  pointer-events: none;
+}
+
 .logostrip__viewport {
   position: absolute;
   left: 182px;
   top: 0;
-  width: 1098px;
-  height: 60px;
+  right: 0;
+  bottom: 0;
   overflow: hidden;
+  /* the one divider that stays put: the label's right-hand edge */
+  box-shadow: inset 1px 0 0 0 currentColor;
 }
 
 .logostrip__track {
@@ -543,42 +591,27 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* the divider that travels with the logo */
+  box-shadow: inset -1px 0 0 0 currentColor;
 }
 
-/* Each logo keeps its own Figma width/height — set inline per tile. */
 .logostrip__tile img,
 .logostrip__tile .asset {
   display: block;
   object-fit: contain;
 }
 
-/* The fixed cell frame, painted over the moving track */
-.logostrip__frame {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  display: flex;
-}
-
-.logostrip__cell {
-  height: 60px;
-  border: 1px solid currentColor;
-  margin-left: -1px;
-  flex: none;
-}
-
-.logostrip__cell:first-child { margin-left: 0; }
-
 .logostrip__label {
   position: absolute;
   left: 19px;
+  margin: 0;
   font-family: var(--font-mono);
   font-weight: 400;
   text-transform: uppercase;
   white-space: pre-line;
+  z-index: 1;
 }
 
-/* Hero variant — white frame, single-line label */
 .logostrip--hero { color: var(--white); }
 
 .logostrip--hero .logostrip__label {
@@ -588,7 +621,6 @@ a {
   color: var(--white);
 }
 
-/* Careers variant — hairline frame, two-line label */
 .logostrip--careers { color: var(--hairline); }
 
 .logostrip--careers .logostrip__label {
@@ -729,6 +761,7 @@ a {
   top: 21px;
   width: 288px;
   margin: 0;
+  font-weight: 400;
   font-size: 20px;
   letter-spacing: 0.6px;
   color: var(--black);
@@ -835,11 +868,13 @@ a {
 
 /* Width comes from an inline style per tab, scaled from Figma's 437px
    illustration box on tab 1; height follows the diagram's own aspect. */
+/* --art-shift nudges a diagram off-centre where its own labels are lopsided,
+   so the drawing reads as centred rather than the SVG's bounding box. */
 .campfire__art {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(calc(-50% + var(--art-shift, 0px)), -50%);
   z-index: 1;
 }
 
@@ -999,6 +1034,7 @@ a {
   position: absolute;
   left: 20px;
   margin: 0;
+  font-weight: 400;
   font-size: 20px;
   letter-spacing: 0.6px;
   color: var(--black);
@@ -1048,7 +1084,19 @@ a {
 
 /* --------------------------------------------------------------------------
    Footer
+
+   Full viewport, like the hero — but where the hero scales everything, here
+   only the two marks grow. Type keeps its size and the elements rearrange
+   around it. The governing measure is --rb, the right-hand block: in Figma it
+   runs 728 → 1360, which is both the width of the three columns together and
+   the width of the Hyde wordmark. Widen the window and the block widens, the
+   wordmark grows with it, and the columns stretch to stay the same width.
    -------------------------------------------------------------------------- */
+
+.section--footer {
+  --rb: max(360px, calc(var(--vw) * 0.494444 - 80px));
+  --rb-left: 50.5556%;              /* 728 / 1440 */
+}
 
 .footer__bg {
   position: absolute;
@@ -1059,26 +1107,40 @@ a {
 .footer__cta-primary   { position: absolute; left: 80px; top: 96px; width: 208px; }
 .footer__cta-secondary { position: absolute; left: 80px; top: 151px; width: 155px; }
 
-.footer__col { position: absolute; top: 96px; width: 200px; }
+.footer__cols {
+  position: absolute;
+  left: var(--rb-left);
+  top: 96px;
+  width: var(--rb);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
 
-.footer__col--site    { left: 728px; }
-.footer__col--company { left: 944px; }
-.footer__col--connect { left: 1160px; }
+.footer__col,
+.footer__certs {
+  position: relative;
+  padding-top: 10px;                /* rule → heading cap, per Figma */
+}
+
+.footer__certs {
+  position: absolute;
+  left: var(--rb-left);
+  top: 279px;
+  width: var(--rb);
+}
 
 .footer__col-rule {
   position: absolute;
   left: 0;
   top: 0;
-  width: 200px;
+  width: 100%;
   height: 1px;
   background: var(--black);
 }
 
 .footer__col-heading {
-  position: absolute;
-  left: 0;
-  top: 10px;
-  margin: 0;
+  margin: 0 0 21px;                 /* heading cap bottom → links cap top = 38 */
   font-family: var(--font-mono);
   font-weight: 500;
   font-size: 10px;
@@ -1088,9 +1150,6 @@ a {
 }
 
 .footer__links {
-  position: absolute;
-  left: 0;
-  top: 38px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1103,46 +1162,49 @@ a {
 .footer__links a { transition: opacity 300ms var(--ease-out); }
 .footer__links a:hover { opacity: 0.5; }
 
-.footer__certs { position: absolute; left: 728px; top: 279px; width: 632px; }
-
-.footer__certs .footer__col-rule { width: 632px; }
-
 .footer__badges {
-  position: absolute;
-  left: 0;
-  top: 38px;
-  width: 162px;
-  height: 33px;
   display: flex;
   gap: 12px;
   align-items: center;
+  height: 33px;
 }
 
+/* The two marks are the only things that scale. Each is capped against the
+   viewport height as well as --rb so a wide, short window can't let them grow
+   up into the columns above. */
 .footer__mark {
   position: absolute;
   left: 80px;
-  top: 623px;
-  width: 191px;
-  height: 220px;
+  bottom: 57px;
+  width: min(calc(var(--rb) * 0.302215), calc(var(--vh) * 0.30 * 0.86818));
 }
 
 .footer__wordmark {
   position: absolute;
-  left: 728px;
-  top: 627px;
-  width: 632px;
-  height: 254px;
+  right: 80px;
+  bottom: 19px;
+  width: min(var(--rb), calc(var(--vh) * 0.45 * 2.48819));
+}
+
+.footer__mark img,
+.footer__mark .asset,
+.footer__wordmark img,
+.footer__wordmark .asset {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .footer__legal {
   position: absolute;
-  top: 873px;
+  bottom: 20px;
   font-family: var(--font-mono);
   font-weight: 500;
   font-size: 10px;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--black);
+  margin: 0;
 }
 
 .footer__legal--privacy { left: 80px; }

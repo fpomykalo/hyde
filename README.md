@@ -12,20 +12,34 @@ npx http-server -p 8080 .
 
 ## Layout
 
-The Figma canvas is kept 1:1. The page is a fixed 1440px column, each section
-is a block of the exact height Figma gives it, and elements inside a section are
-positioned at their exact offset from that section's top-left corner. Section
-tops therefore land on the Figma y-coordinates:
+The body is a fixed 1440px column: each section is a block of the exact height
+Figma gives it, and elements inside sit at their exact offset from that
+section's top-left corner. At a 1440 x 900 window the whole page is Figma to
+the pixel.
 
-| Section | Top | Height |
+| Section | Height | Behaviour |
 |---|---|---|
-| Hero | 0 | 900 |
-| Two Paths to Specialist AI | 1053 | 623 |
-| Campfire | 1725 | 776 |
-| Industries | 2550 | 651 |
-| Careers | 3251 | 592 |
-| Blog | 3893 | 662 |
-| Footer | 4605 | 900 |
+| Hero | 100vh | Full-bleed, scales with the window |
+| Two Paths to Specialist AI | 623 | Fixed 1440 column |
+| Campfire | 776 | Fixed 1440 column |
+| Industries | 651 | Fixed 1440 column |
+| Careers | 592 | Fixed 1440 column |
+| Blog | 662 | Fixed 1440 column |
+| Footer | 100vh | Full-bleed, rearranges |
+
+**Hero** fills the viewport and the video bleeds to its edges. Its content sits
+in two groups — one pinned to the top, one to the bottom — each holding the
+Figma coordinates of a 1440-wide frame and scaled as a unit by `--s`, so the
+type grows and shrinks with the window. `--s` is `min(width/1440, height/620)`,
+computed in `scripts/main.js` because CSS cannot divide a length by a length to
+get the unitless number `scale()` needs. The nav scales with it so their gutters
+agree.
+
+**Footer** also fills the viewport, but only the two marks scale. Type keeps its
+size and the elements rearrange. The governing measure is `--rb`, the
+right-hand block: in Figma it runs 728 to 1360, which is both the combined width
+of the three columns and the width of the wordmark. Widen the window and the
+block widens, the wordmark grows with it, and the columns stretch to match.
 
 Two details make the numbers line up exactly, and both are worth knowing before
 editing:
@@ -34,6 +48,11 @@ editing:
   A `top` value is the top of the capital letters, not the top of the line box.
   `text-box-trim` doesn't apply to flex containers, so chips, buttons and nav
   items set an explicit cap-height `line-height` instead.
+- **Headings are weight 400, and font synthesis is off.** Neue Montreal ships
+  Regular only. Headings default to bold, and a browser asked for a weight it
+  doesn't have synthesises one by drawing every glyph twice, slightly offset —
+  which reads as doubled, smeared text and runs wider than it should. Figma
+  specifies Regular throughout.
 - **Outlines are inset shadows, not borders.** Figma draws strokes inside the
   frame; a CSS border would add 2px to every chip and button, and would shift
   the children of every bordered block 1px in. Blocks that contain positioned
@@ -61,9 +80,12 @@ use the same treatment as they scroll into view.
 the logo flips black/white with the background rather than at one hardcoded
 scroll offset. Adding a dark section later needs nothing but the attribute.
 
-**Logo strips** — the seven-cell frame is fixed; the logos drift through the
-masked area behind it, cloned so the loop has no seam. The hero drifts left, the
-careers strip right. Both pause on hover. Add logos by adding tiles.
+**Logo strips** — one long box with a fixed outer edge and a fixed label at the
+left. Everything right of the label scrolls, and the dividers between logos are
+carried on the tiles so they travel with the logos rather than sitting still in
+front of them. Tiles are cloned so the loop has no seam. The hero drifts left
+and the careers strip right, both at the same speed, and both pause on hover.
+Add logos by adding tiles.
 
 **Campfire** — four tabs, 7s each. The black bar fills the grey track as you
 read, then the next tab opens. Clicking a tab jumps to it and restarts its

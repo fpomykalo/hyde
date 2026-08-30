@@ -15,6 +15,56 @@
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ------------------------------------------------------------------------
+     0. Viewport metrics
+
+     100vw counts the scrollbar, which would push the full-bleed hero and
+     footer wider than the document and produce a horizontal scroll. Publish
+     the real client size instead; the CSS falls back to 100vw/100vh if this
+     never runs.
+     ---------------------------------------------------------------------- */
+
+  function syncViewport() {
+    var d = document.documentElement;
+    var w = d.clientWidth;
+    var h = d.clientHeight;
+    d.style.setProperty('--vw', w + 'px');
+    d.style.setProperty('--vh', h + 'px');
+    // Scale the hero from the 1440 Figma baseline, capped by height so its top
+    // and bottom groups (240 + 300 tall) can never meet on a short, wide window.
+    d.style.setProperty('--s', String(Math.min(w / 1440, h / 620)));
+  }
+  syncViewport();
+
+  /* ------------------------------------------------------------------------
+     0b. Hero video
+
+     Muted autoplay is normally allowed, but iOS refuses it in Low Power Mode
+     and some browsers block it until the page has been interacted with. Retry
+     on the first gesture rather than leaving the poster frozen.
+     ---------------------------------------------------------------------- */
+
+  (function heroVideo() {
+    var v = document.querySelector('.hero__bg video');
+    if (!v) return;
+
+    function attempt() {
+      var p = v.play();
+      if (p && typeof p.catch === 'function') p.catch(function () {});
+    }
+
+    attempt();
+    ['pointerdown', 'touchstart', 'scroll', 'keydown'].forEach(function (evt) {
+      window.addEventListener(evt, function once() {
+        window.removeEventListener(evt, once);
+        if (v.paused) attempt();
+      }, { passive: true });
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden && v.paused) attempt();
+    });
+  })();
+
+  /* ------------------------------------------------------------------------
      1. Asset placeholders
 
      Rather than showing broken-image glyphs, swap any image that fails to
@@ -75,14 +125,25 @@
   var themedSections = Array.prototype.slice.call(
     document.querySelectorAll('[data-bg]')
   );
-  var NAV_MID = 27; // half of the 53px bar
+  // Half the bar's height on screen. The bar is scaled, so this tracks --s.
+  function navMid() {
+    return nav.getBoundingClientRect().height / 2 || 27;
+  }
 
   function syncNavTheme() {
-    var theme = 'dark';
+    // Light is the default: the page ground is white, and the gaps between
+    // sections belong to no section at all. Only an explicitly dark section
+    // sitting under the bar makes it dark, so the moment the hero's bottom
+    // edge passes the bar the lockup flips rather than waiting for the next
+    // section to arrive.
+    var theme = 'light';
+    var mid = navMid();
     for (var i = 0; i < themedSections.length; i++) {
-      var r = themedSections[i].getBoundingClientRect();
-      if (r.top <= NAV_MID && r.bottom > NAV_MID) {
-        theme = themedSections[i].getAttribute('data-bg');
+      var el = themedSections[i];
+      if (el.getAttribute('data-bg') !== 'dark') continue;
+      var r = el.getBoundingClientRect();
+      if (r.top <= mid && r.bottom > mid) {
+        theme = 'dark';
         break;
       }
     }
@@ -247,10 +308,10 @@
     var trackW = (cards.length - 1) * STEP + CARD_W;
     var maxOffset = Math.max(0, trackW - viewportW);
 
-    // Pages are the positions the track can actually reach, not the number of
-    // cards — otherwise the last dots all resolve to the same offset and do
-    // nothing when clicked. Adding industries adds pages automatically.
-    var pageCount = maxOffset > 0 ? Math.ceil(maxOffset / STEP) + 1 : 1;
+    // One dot per industry. The track runs out of travel before the last card
+    // can reach the left edge, so the final dots share a scroll position — the
+    // count is meant to read as "four industries", which is how Figma draws it.
+    var pageCount = cards.length;
     var index = 0;
     var dots = [];
 
@@ -268,7 +329,7 @@
       });
 
       if (prev) prev.hidden = index === 0;
-      if (next) next.hidden = offsetFor(index) >= maxOffset - 0.5;
+      if (next) next.hidden = index >= pageCount - 1;
     }
 
     function goTo(i, animate) {
@@ -411,6 +472,9 @@
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
+  window.addEventListener('resize', function () {
+    syncViewport();
+    onScroll();
+  });
   syncNavTheme();
 })();

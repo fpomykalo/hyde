@@ -40,6 +40,18 @@
   --footer-heading: #413d3c;
   --dot-idle: #d9d9d9;         /* carousel pagination, inactive              */
 
+  /* Viewport metrics. JS overwrites --vw/--vh with the document's client size
+     so the scrollbar isn't counted (100vw includes it and would overflow).
+     --s scales the hero from the 1440 Figma baseline, capped by height so the
+     top and bottom groups can never meet on a short, wide window. */
+  --vw: 100vw;
+  --vh: 100vh;
+
+  /* --s must be a unitless number for scale(); CSS cannot divide a length by a
+     length, so scripts/main.js computes it. 1 is the Figma baseline and the
+     fallback if the script never runs. */
+  --s: 1;
+
   /* Canvas */
   --canvas-w: 1440px;
   --gutter: 80px;              /* content runs 80 → 1360                      */

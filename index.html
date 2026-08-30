@@ -49,37 +49,34 @@
       </video>
     </div>
 
-    <div class="hero__rule"></div>
+    <!-- Two groups, each holding its exact Figma coordinates and scaled as a
+         whole: the top pins to the top of the viewport, the bottom to the
+         bottom, so the hero fills any height while the type scales with it. -->
+    <div class="hero__top">
+      <div class="hero__rule"></div>
+      <p class="hero__eyebrow cap">Your model. your weights. your advantage.</p>
+      <h1 class="hero__line hero__line--one cap reveal" style="--reveal-delay:100ms">Stop Renting</h1>
+    </div>
 
-    <p class="hero__eyebrow cap">Your model. your weights. your advantage.</p>
+    <div class="hero__bottom">
+      <p class="hero__line hero__line--two cap reveal" style="--reveal-delay:250ms">Intelligence.</p>
+      <p class="hero__lede cap reveal" style="--reveal-delay:400ms">↘<br>Hyde&rsquo;s training platform and forward deployed model helps institutions leverage their own knowledge to build custom AI models.</p>
 
-    <h1 class="hero__line hero__line--one cap reveal" style="--reveal-delay:100ms">Stop Renting</h1>
-    <p class="hero__line hero__line--two cap reveal" style="--reveal-delay:250ms">Intelligence.</p>
-
-    <p class="hero__lede cap reveal" style="--reveal-delay:400ms">↘<br>Hyde&rsquo;s training platform and forward deployed model helps institutions leverage their own knowledge to build custom AI models.</p>
-
-    <!-- Partner strip: fixed 7-cell frame, logos drift left inside cells 2–7 -->
-    <div class="logostrip logostrip--hero reveal" style="top:820px; --reveal-delay:550ms">
-      <div class="logostrip__viewport">
-        <div class="logostrip__track" data-marquee="left" data-speed="45">
-          <div class="logostrip__tile"><img src="assets/vectors/logos/palantir-white.svg" alt="Palantir" width="85" height="20"></div>
-          <div class="logostrip__tile"><img src="assets/vectors/logos/nvidia-white.svg" alt="NVIDIA" width="106" height="20"></div>
-          <div class="logostrip__tile"><img src="assets/vectors/logos/bain-white.svg" alt="Bain &amp; Company" width="155" height="17"></div>
-          <div class="logostrip__tile"><img src="assets/vectors/logos/aws-white.svg" alt="AWS" width="43" height="26"></div>
-          <div class="logostrip__tile"><img src="assets/vectors/logos/general-catalyst-white.svg" alt="General Catalyst" width="132" height="17"></div>
-          <div class="logostrip__tile"><img src="assets/vectors/logos/bcv-white.svg" alt="Bain Capital Ventures" width="94" height="17"></div>
+      <!-- One long box. The label is fixed at the left; everything to its right
+           scrolls, dividers travelling with the logos. -->
+      <div class="logostrip logostrip--hero reveal" style="--reveal-delay:550ms">
+        <p class="logostrip__label cap">our partners</p>
+        <div class="logostrip__viewport">
+          <div class="logostrip__track" data-marquee="left" data-speed="45">
+            <div class="logostrip__tile"><img src="assets/vectors/logos/palantir-white.svg" alt="Palantir" width="85" height="20"></div>
+            <div class="logostrip__tile"><img src="assets/vectors/logos/nvidia-white.svg" alt="NVIDIA" width="106" height="20"></div>
+            <div class="logostrip__tile"><img src="assets/vectors/logos/bain-white.svg" alt="Bain &amp; Company" width="155" height="17"></div>
+            <div class="logostrip__tile"><img src="assets/vectors/logos/aws-white.svg" alt="AWS" width="43" height="26"></div>
+            <div class="logostrip__tile"><img src="assets/vectors/logos/general-catalyst-white.svg" alt="General Catalyst" width="132" height="17"></div>
+            <div class="logostrip__tile"><img src="assets/vectors/logos/bcv-white.svg" alt="Bain Capital Ventures" width="94" height="17"></div>
+          </div>
         </div>
       </div>
-      <div class="logostrip__frame" aria-hidden="true">
-        <span class="logostrip__cell" style="width:183px"></span>
-        <span class="logostrip__cell" style="width:184px"></span>
-        <span class="logostrip__cell" style="width:184px"></span>
-        <span class="logostrip__cell" style="width:184px"></span>
-        <span class="logostrip__cell" style="width:184px"></span>
-        <span class="logostrip__cell" style="width:184px"></span>
-        <span class="logostrip__cell" style="width:183px"></span>
-      </div>
-      <p class="logostrip__label cap">our partners</p>
     </div>
   </section>
 
@@ -235,7 +232,7 @@
         </div>
         <div class="campfire__frame">
           <img class="campfire__gradient" src="assets/gradients/1.jpg" alt="" width="959" height="598">
-          <div class="campfire__art" style="width:607.75px">
+          <div class="campfire__art" style="width:607.75px; --art-shift:63px">
 <svg class="hyde-diagram" preserveAspectRatio="xMidYMid meet" viewBox="-6 0 420 190" style="overflow:visible">
 <defs>
 <clipPath id="d2_w1" clipPathUnits="userSpaceOnUse"><rect x="6" y="0" width="290" height="190" style="transform-box:fill-box;transform-origin:left center;animation:wp_20_40 5s ease-in-out infinite both"></rect></clipPath>
@@ -455,9 +452,12 @@
     <a class="btn btn--outline-black careers__cta cap reveal" style="--reveal-delay:120ms" href="#careers">view all open positions&nbsp;↗</a>
 
     <!-- Same fixed-frame marquee as the hero, drifting the other way -->
+    <!-- Same long box, drifting the other way at the same speed as the hero -->
     <div class="logostrip logostrip--careers reveal" style="top:162px; --reveal-delay:160ms">
+      <p class="logostrip__label cap">built by
+the top minds</p>
       <div class="logostrip__viewport">
-        <div class="logostrip__track" data-marquee="right" data-speed="55">
+        <div class="logostrip__track" data-marquee="right" data-speed="45">
           <div class="logostrip__tile"><img src="assets/vectors/logos/palantir-black.svg" alt="Palantir" width="85" height="20"></div>
           <div class="logostrip__tile"><img src="assets/vectors/logos/optiver-black.svg" alt="Optiver" width="94" height="20"></div>
           <div class="logostrip__tile"><img src="assets/vectors/logos/deepmind-black.svg" alt="Google DeepMind" width="144" height="18"></div>
@@ -466,17 +466,6 @@
           <div class="logostrip__tile"><img src="assets/vectors/logos/kkr-black.svg" alt="KKR" width="64" height="16"></div>
         </div>
       </div>
-      <div class="logostrip__frame" aria-hidden="true">
-        <span class="logostrip__cell" style="width:183px"></span>
-        <span class="logostrip__cell" style="width:184px"></span>
-        <span class="logostrip__cell" style="width:184px"></span>
-        <span class="logostrip__cell" style="width:184px"></span>
-        <span class="logostrip__cell" style="width:184px"></span>
-        <span class="logostrip__cell" style="width:184px"></span>
-        <span class="logostrip__cell" style="width:183px"></span>
-      </div>
-      <p class="logostrip__label cap">built by
-the top minds</p>
     </div>
 
     <div class="careers__list reveal" style="--reveal-delay:200ms">
@@ -553,7 +542,7 @@ the top minds</p>
     <a class="btn btn--outline-black blog__cta cap reveal" style="--reveal-delay:120ms" href="#blog">view all blog posts&nbsp;↗</a>
 
     <article class="card blog__card--one reveal" style="--reveal-delay:160ms">
-      <div class="card__media"><img src="assets/photos/blog-manifesto.jpg" alt="" width="641" height="500"></div>
+      <div class="card__media"><img src="assets/videos/hero%20stills/Hyde%20Hero%201.2.jpg" alt="" width="641" height="500"></div>
       <div class="card__overlay card__overlay--strong"></div>
       <div class="card__overlay card__overlay--hover"></div>
       <span class="card-index cap">1.</span>
@@ -572,7 +561,7 @@ the top minds</p>
     </article>
 
     <article class="card blog__card--two reveal" style="--reveal-delay:240ms">
-      <div class="card__media"><img src="assets/photos/blog-great-migration.jpg" alt="" width="640" height="500"></div>
+      <div class="card__media"><img src="assets/gradients/4.jpg" alt="" width="640" height="500"></div>
       <div class="card__overlay card__overlay--strong"></div>
       <div class="card__overlay card__overlay--hover"></div>
       <span class="card-index cap">2.</span>
@@ -600,6 +589,7 @@ the top minds</p>
     <a class="btn btn--accent footer__cta-primary cap reveal" href="#contact">Talk to an engineer</a>
     <a class="btn btn--outline-black footer__cta-secondary cap reveal" style="--reveal-delay:80ms" href="#blog">Read the blog</a>
 
+    <div class="footer__cols">
     <nav class="footer__col footer__col--site reveal" style="--reveal-delay:80ms" aria-label="Site">
       <span class="footer__col-rule"></span>
       <h2 class="footer__col-heading cap">Site</h2>
@@ -627,6 +617,8 @@ the top minds</p>
         <li><a href="#">X</a></li>
       </ul>
     </nav>
+
+    </div>
 
     <div class="footer__certs reveal" style="--reveal-delay:200ms">
       <span class="footer__col-rule"></span>
