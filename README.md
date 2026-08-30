@@ -83,9 +83,9 @@ scroll offset. Adding a dark section later needs nothing but the attribute.
 **Logo strips** — one long box with a fixed outer edge and a fixed label at the
 left. Everything right of the label scrolls, and the dividers between logos are
 carried on the tiles so they travel with the logos rather than sitting still in
-front of them. Tiles are cloned so the loop has no seam. The hero drifts left
-and the careers strip right, both at the same speed, and both pause on hover.
-Add logos by adding tiles.
+front of them. Tiles are cloned so the loop has no seam. Both strips drift left
+at the same speed and pause on hover; direction is the `data-marquee`
+attribute on each track (`left` or `right`). Add logos by adding tiles.
 
 **Campfire** — four tabs, 7s each. The black bar fills the grey track as you
 read, then the next tab opens. Clicking a tab jumps to it and restarts its
