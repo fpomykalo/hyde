@@ -117,6 +117,13 @@
 
   .nav.is-logo-dark .nav__toggle span { background: var(--black); }
 
+  /* The panel is a later sibling, so without a z-index of its own the logo
+     goes behind it. It is forced to the dark lockup while the panel is open:
+     the ground is light whatever the section underneath happens to be. */
+  .nav.is-open .nav__logo { z-index: 2; }
+  .nav.is-open .nav__logo .logo--light { opacity: 0; }
+  .nav.is-open .nav__logo .logo--dark  { opacity: 1; }
+
   .nav.is-open .nav__toggle span { background: var(--black); }
   .nav.is-open .nav__toggle span:first-child { transform: translateY(3.25px) rotate(45deg); }
   .nav.is-open .nav__toggle span:last-child  { transform: translateY(-3.25px) rotate(-45deg); }
@@ -348,9 +355,24 @@
   .card-index  { top: 17px; right: 17px; }
   .card__title { font-size: 30px; line-height: 30px; }
 
-  /* Chips, copy and link leave the image and become a bordered box below it */
+  /* Chips, copy and link leave the image and become a bordered box below it.
+     The track already stretches every card to the tallest of them; the card
+     passes that height down to the box, and the box drops the slack between
+     the chips and the copy, so the copy and its link sit on the floor of every
+     box at the same line. */
+  .industries__card,
+  .section--blog .card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section--industries .card__media,
+  .section--blog .card__media { flex: none; }
+
   .card__info {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     position: relative;
     padding: 16px;
     outline: 1px solid var(--hairline);
@@ -376,19 +398,23 @@
     color: var(--black);
   }
 
+  /* flex-start, or stretching would run the link's underline the full width */
   .card__info .card-link {
     position: static;
     display: inline-block;
+    align-self: flex-start;
     margin-top: 16px;
     color: var(--black);
   }
 
+  /* The auto margin is where a short card's spare height goes. */
   .ind__chips,
   .blog__meta {
     position: static;
     display: flex;
     flex-wrap: wrap;
     gap: 0;
+    margin-bottom: auto;
   }
 
   /* ------------------------------------------------- two paths (overlaid) */

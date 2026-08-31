@@ -320,6 +320,20 @@
   })();
 
   /* ------------------------------------------------------------------------
+     3c. Placeholder links
+
+     The social and article links are still href="#" until their destinations
+     exist. Left alone, a bare "#" is a jump to the top of the document, so
+     clicking one throws you out of the footer. They stay inert until they are
+     given somewhere to go.
+     ---------------------------------------------------------------------- */
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href="#"]');
+    if (a) e.preventDefault();
+  });
+
+  /* ------------------------------------------------------------------------
      4. Campfire tabs
 
      Each tab reads for 7s: the black bar fills the grey track, then the next

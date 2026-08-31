@@ -105,6 +105,11 @@ pages.
 the artwork scales to 1.0857, and on the Two Paths cards the chip goes solid
 white and the CTA goes solid accent, per the Figma component variants.
 
+**In-page links** land the target section's top edge at the foot of the fixed
+bar rather than underneath it (`scroll-margin-top`). Links that are still
+`href="#"` placeholders are held inert, since a bare `#` would otherwise throw
+you to the top of the document.
+
 Everything respects `prefers-reduced-motion`.
 
 ## Mobile
@@ -119,12 +124,15 @@ What changes beyond type and spacing:
 - **Nav** collapses to the logo and a hamburger. Figma draws only the closed
   state, so the open panel is built from the same links: a half-transparent
   white ground with the page blurred behind it, the buttons themselves solid.
+  The logo stays with you while the panel is open, in its dark lockup.
 - **Campfire** drops the tabs: all four blocks stack, each with its
   illustration full-bleed above its own text.
 - **Industries and Blog cards** move their chips, copy and link out from over
   the image into a bordered box beneath it; only the index and title stay on
-  the photo. Both become one-card carousels — four dots for four industries,
-  two for the two articles.
+  the photo. Every box in a set is the height of the tallest: the spare height
+  opens between the chips and the copy, so the copy and its link sit on the
+  same line across all of them. Both become one-card carousels — four dots for
+  four industries, two for the two articles.
 - **Two Paths cards** keep their text over the image, and hold the desktop
   card's 641:500 ratio by `aspect-ratio` rather than a fixed height, so they
   don't flatten on a phone wider than 393. A full-bleed rule separates the two.

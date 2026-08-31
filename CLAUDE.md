@@ -48,6 +48,14 @@ assets/             see assets/README.md
   br` and `.br-mobile` are `display: none` on the layout that doesn't want
   them, which closed "Manifesto." up against "Own". Author the space before
   the tag — it collapses at the end of a line where the break does show.
+- **`overflow-x: hidden` on `body` makes it a scroll container.** `hidden` on
+  one axis forces the other to compute `auto`, so `<body>` competes with the
+  document for the scroll, and an in-page link nudges it a few pixels instead
+  of jumping. `overflow-x: clip` leaves `overflow-y: visible`.
+- **Each diagram is centred on its ink, not its viewBox.** The labels sit
+  outside the drawing and lopsidedly, so `--art-shift` per tab is the offset
+  between the drawing's own bounding box and the middle of the frame. The
+  numbers come from measuring, not from the file — see the note below.
 - **`--art-shift` rides `--art-scale`.** A nudge tuned on the 1440 column is
   in unscaled pixels; mobile draws the same diagram at 0.42, so the shift has
   to be multiplied by the scale or it lands 2.4x too far.
@@ -87,6 +95,13 @@ box beneath it on mobile.
 
 ## Verification
 
+Diagram centring is measured, not eyeballed: walk the SVG's shape elements
+(skipping `<text>` and anything under `<defs>`), take the union of their
+`getBBox()` plus half the stroke width, and compare that centre to the frame's.
+The residual is what `--art-shift` cancels; all four sit at 0px. The diagrams
+run on a 5s loop and spend the first fifth of it undrawn, so a screenshot that
+shows only the origin dot is a timing artifact, not a broken illustration.
+
 There is no test suite. Changes are checked by rendering in headless Chromium
 and measuring against the Figma coordinates. Note the sandbox has no network,
 so Google Fonts and Typekit do not load there and text metrics fall back —
@@ -109,6 +124,7 @@ button widths read 1–2px wide and nothing else should differ.
   (campfire illustrations, the rules between jobs) stay edge to edge as drawn.
 - Figma's mobile careers list shows three jobs; the build carries the desktop
   frame's five.
-- Campfire tab 1's diagram sits 20px left of centre on desktop (8px on mobile)
-  — the cloud drawing is off-centre inside its own viewBox. Tabs 2, 3 and 4
-  are centred to within 3px. Fixable with an `--art-shift` if it reads wrong.
+- Thirteen links are still `href="#"` placeholders (the social links, the card
+  and job links, the CTAs). A bare `#` is a jump to the top of the document, so
+  a click handler holds them inert until they are given somewhere to go — see
+  section 3c of `scripts/main.js`. Delete that guard once they have URLs.
