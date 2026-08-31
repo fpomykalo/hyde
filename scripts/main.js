@@ -17,10 +17,10 @@
   /* ------------------------------------------------------------------------
      0. Viewport metrics
 
-     100vw counts the scrollbar, which would push the full-bleed hero and
-     footer wider than the document and produce a horizontal scroll. Publish
-     the real client size instead; the CSS falls back to 100vw/100vh if this
-     never runs.
+     100vw counts the scrollbar, which would push the full-bleed hero video and
+     the footer wider than the document and produce a horizontal scroll.
+     Publish the real client size instead; the CSS falls back to 100vw/100vh if
+     this never runs.
      ---------------------------------------------------------------------- */
 
   function syncViewport() {
@@ -29,9 +29,6 @@
     var h = d.clientHeight;
     d.style.setProperty('--vw', w + 'px');
     d.style.setProperty('--vh', h + 'px');
-    // Scale the hero from the 1440 Figma baseline, capped by height so its top
-    // and bottom groups (240 + 300 tall) can never meet on a short, wide window.
-    d.style.setProperty('--s', String(Math.min(w / 1440, h / 620)));
   }
   syncViewport();
 
@@ -125,7 +122,7 @@
   var themedSections = Array.prototype.slice.call(
     document.querySelectorAll('[data-bg]')
   );
-  // Half the bar's height on screen. The bar is scaled, so this tracks --s.
+  // Half the bar's height — the line the section under it is measured against.
   function navMid() {
     return nav.getBoundingClientRect().height / 2 || 27;
   }
@@ -308,10 +305,10 @@
     var trackW = (cards.length - 1) * STEP + CARD_W;
     var maxOffset = Math.max(0, trackW - viewportW);
 
-    // One dot per industry. The track runs out of travel before the last card
-    // can reach the left edge, so the final dots share a scroll position — the
-    // count is meant to read as "four industries", which is how Figma draws it.
-    var pageCount = cards.length;
+    // Dots for the positions the track can actually reach, not one per card —
+    // the last card can't scroll to the left edge, so a per-card count would
+    // leave dots that resolve to the same offset and do nothing when clicked.
+    var pageCount = maxOffset > 0 ? Math.ceil(maxOffset / STEP) + 1 : 1;
     var index = 0;
     var dots = [];
 
@@ -329,7 +326,7 @@
       });
 
       if (prev) prev.hidden = index === 0;
-      if (next) next.hidden = index >= pageCount - 1;
+      if (next) next.hidden = offsetFor(index) >= maxOffset - 0.5;
     }
 
     function goTo(i, animate) {

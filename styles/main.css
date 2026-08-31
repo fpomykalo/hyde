@@ -7,7 +7,7 @@
    canvas 1:1: the page is a fixed 1440px column centred in the viewport, each
    section is a block of the exact height Figma gives it, and everything inside
    a section is absolutely positioned at its exact offset from that section's
-   top-left corner. Section tops therefore land on the Figma y-coordinates:
+   top-left corner. At a 1440 × 900 window the page is Figma to the pixel:
 
      hero        0     h 900     footer  4605   h 900
      two paths   1053  h 623
@@ -15,6 +15,11 @@
      industries  2550  h 651
      careers     3251  h 592
      blog        3893  h 662
+
+   Two exceptions, both viewport-tall: the hero, whose content stays in the
+   column at Figma's sizes while only its video bleeds to the viewport edges;
+   and the footer, which spans the viewport and rearranges around a wordmark
+   that grows with it.
 
    Text boxes are cap-height trimmed (as Figma trims them), so a `top` value
    here is the top of the capital letters, not the top of the line box.
@@ -39,7 +44,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 400; }
 
 body {
   font-synthesis-weight: none;
-  overflow-x: hidden;   /* the hero and footer break out to the full viewport */
+  overflow-x: hidden;   /* the hero video and the footer break out full-width */
   margin: 0;
   background: var(--white);
   color: var(--black);
@@ -75,7 +80,8 @@ a {
   width: var(--canvas-w);
 }
 
-.section--hero,
+/* The footer spans the viewport; the hero stays in the column and lets only
+   its video bleed out. Both are viewport-tall. */
 .section--footer {
   width: var(--vw);
   margin-left: calc(50% - var(--vw) / 2);
@@ -349,16 +355,13 @@ a {
    Navigation
    -------------------------------------------------------------------------- */
 
-/* The bar scales with the hero rather than sitting in the 1440 column, so its
-   gutter lines up with the hero's at any width. At 1440 it is Figma exactly. */
 .nav {
   position: fixed;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: var(--canvas-w);
   height: 53px;
-  transform: scale(var(--s));
-  transform-origin: top left;
   z-index: 100;
 }
 
@@ -456,9 +459,15 @@ a {
 /* Ground colours behind every image slot. They are covered completely once the
    artwork is in assets/, and until then they keep the white type legible
    instead of leaving the section blank. */
+
+/* The one thing in the hero that leaves the 1440 column: the video fills the
+   viewport's width at whatever size it happens to be. */
 .hero__bg {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - var(--vw) / 2);
+  width: var(--vw);
   overflow: hidden;
   background: #262d34;
 }
@@ -472,19 +481,18 @@ a {
   display: block;
 }
 
-/* Each group keeps the Figma coordinates of a 1440-wide frame and is scaled
-   as a unit — the top pinned to the top of the viewport, the bottom to the
-   bottom. Type and spacing therefore scale together with the window. */
+/* Two groups holding their exact Figma coordinates at Figma's sizes — the top
+   pinned to the top of the hero, the bottom to the bottom. Nothing scales; a
+   taller window simply opens more space between them. */
 .hero__top,
 .hero__bottom {
   position: absolute;
   left: 0;
-  width: 1440px;
-  transform: scale(var(--s));
+  width: var(--canvas-w);
 }
 
-.hero__top    { top: 0;    height: 240px; transform-origin: top left; }
-.hero__bottom { bottom: 0; height: 300px; transform-origin: bottom left; }
+.hero__top    { top: 0;    height: 240px; }
+.hero__bottom { bottom: 0; height: 300px; }
 
 .hero__rule {
   position: absolute;
@@ -897,10 +905,14 @@ a {
    Industries carousel
    -------------------------------------------------------------------------- */
 
+/* Top is 123, not 124, so the cards' top border lands on the header block's
+   bottom border instead of beneath it — two adjacent hairlines read as a 2px
+   line. Two Paths and Blog already share their borders this way; Figma has
+   Industries a pixel lower, which is what produced the doubled rule. */
 .industries__viewport {
   position: absolute;
   left: 80px;
-  top: 124px;
+  top: 123px;
   width: 1280px;
   height: 500px;
   overflow: hidden;

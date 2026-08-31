@@ -19,7 +19,7 @@ the pixel.
 
 | Section | Height | Behaviour |
 |---|---|---|
-| Hero | 100vh | Full-bleed, scales with the window |
+| Hero | 100vh | Content in the column; only the video is full-bleed |
 | Two Paths to Specialist AI | 623 | Fixed 1440 column |
 | Campfire | 776 | Fixed 1440 column |
 | Industries | 651 | Fixed 1440 column |
@@ -27,13 +27,12 @@ the pixel.
 | Blog | 662 | Fixed 1440 column |
 | Footer | 100vh | Full-bleed, rearranges |
 
-**Hero** fills the viewport and the video bleeds to its edges. Its content sits
-in two groups — one pinned to the top, one to the bottom — each holding the
-Figma coordinates of a 1440-wide frame and scaled as a unit by `--s`, so the
-type grows and shrinks with the window. `--s` is `min(width/1440, height/620)`,
-computed in `scripts/main.js` because CSS cannot divide a length by a length to
-get the unitless number `scale()` needs. The nav scales with it so their gutters
-agree.
+**Hero** is as tall as the viewport, and the video behind it spans the viewport's
+full width at any size. Everything else — logo, nav, headline, subtext, partner
+strip — stays at Figma's sizes inside the 1440 column. The content sits in two
+groups, one pinned to the top of the hero and one to the bottom, each holding
+its exact Figma coordinates; a taller window simply opens more space between
+them. At 1440 x 900 it is Figma to the pixel.
 
 **Footer** also fills the viewport, but only the two marks scale. Type keeps its
 size and the elements rearrange. The governing measure is `--rb`, the
@@ -93,8 +92,10 @@ timer. The timer only runs while the section is on screen. Each illustration is
 an HTML animation loaded on first open, with a still as fallback.
 
 **Industries** — a carousel: chevrons appear only where there's somewhere to go,
-dots jump to a card, and the track can be dragged. Pages are derived from the
-reachable scroll positions, so adding industries adds pages.
+dots jump to a page, and the track can be dragged. Dots count the positions the
+track can actually reach rather than the cards, since the last card can't scroll
+to the left edge — four industries give three pages. Adding industries adds
+pages.
 
 **Cards** — Two Paths, Industries and Blog share one hover: the overlay darkens,
 the artwork scales to 1.0857, and on the Two Paths cards the chip goes solid
