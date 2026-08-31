@@ -89,7 +89,8 @@ attribute on each track (`left` or `right`). Add logos by adding tiles.
 **Campfire** — four tabs, 7s each. The black bar fills the grey track as you
 read, then the next tab opens. Clicking a tab jumps to it and restarts its
 timer. The timer only runs while the section is on screen. Each illustration is
-an HTML animation loaded on first open, with a still as fallback.
+a gradient with its animated diagram inlined over it; the diagrams' keyframes
+live in `styles/diagrams.css`.
 
 **Industries** — a carousel: chevrons appear only where there's somewhere to go,
 dots jump to a page, and the track can be dragged. Dots count the positions the

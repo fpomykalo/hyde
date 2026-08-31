@@ -24,9 +24,8 @@ Two of the three are wired up here; the third is not a file at all.
   `https://use.typekit.net/wvh4zss.css` (linked in `index.html`). The family
   name Typekit publishes is `new-science`, Medium is weight 500. Nothing to
   put in this folder.
-- **Neue Montreal** — self-hosted from `fonts/NeueMontreal-Regular.otf`.
-  Converting it to `.woff2` would cut it from ~40 KB to ~20 KB and is better
-  supported; the OTF works fine in the meantime.
+- **Neue Montreal** — self-hosted, `woff2` with the original `otf` as a
+  fallback source.
 - **IBM Plex Mono** — Google Fonts, Regular + Medium, linked in `index.html`.
 
 `JetBrains Mono` is also pulled from Google Fonts — the campfire diagram
@@ -47,7 +46,7 @@ Each tab is a gradient with a white line-art animation centred on it:
 render — six gradients were supplied for four tabs, with no numbering to say
 which goes where. To re-pair one, change the number in its `<img
 class="campfire__gradient" src="assets/gradients/N.jpg">` in `index.html`.
-`2.jpg` and `4.jpg` are currently unused.
+`2.jpg` is the only unused gradient; `4.jpg` is now the second blog card.
 
 The four animations are inlined into `index.html` rather than iframed, as their
 own README recommends when several share a page; their keyframes are collected
@@ -90,8 +89,13 @@ JPEG re-encoded (progressive, optimized):
 First paint went from **43.4 MB to 3.3 MB**. Re-run the same settings after any
 re-export, or ask and it'll be done.
 
-## Still missing
+## Blog imagery
 
-- **Blog card images** — `photos/blog-manifesto.jpg` and
-  `photos/blog-great-migration.jpg` (641 × 500 and 640 × 500 boxes). These are
-  the only two slots still rendering as labelled placeholders.
+No dedicated blog photography was supplied, so the two cards borrow from what
+is here: the manifesto uses `videos/hero stills/Hyde Hero 1.2.jpg` (the last
+frame of the hero video, with the mark lit), and The Great Migration uses
+`gradients/4.jpg`. Drop real artwork in and repoint the two `<img>` tags in
+`index.html` whenever it exists.
+
+Every asset slot on the page now resolves; nothing renders as a placeholder.
+`gradients/2.jpg` is the only unused file.
