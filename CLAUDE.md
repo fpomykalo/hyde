@@ -107,17 +107,33 @@ box beneath it on mobile.
 
 ## Verification
 
-Diagram centring is measured, not eyeballed: walk the SVG's shape elements
-(skipping `<text>` and anything under `<defs>`), take the union of their
-`getBBox()` plus half the stroke width, and compare that centre to the frame's.
-The residual is what `--art-shift` cancels; all four sit at 0px. The diagrams
-run on a 5s loop and spend the first fifth of it undrawn, so a screenshot that
-shows only the origin dot is a timing artifact, not a broken illustration.
+`node tools/measure.js` — 200 assertions across 1440x900, 393x852 and 430x932.
+Run it before and after a change; it needs Playwright (`npm install --no-save
+playwright && npx playwright install chromium`) and serves the repo itself.
+Only failures print. Add an assertion whenever you fix something a measurement
+could have caught — most of the mobile suite is exactly that.
 
-There is no test suite. Changes are checked by rendering in headless Chromium
-and measuring against the Figma coordinates. Note the sandbox has no network,
-so Google Fonts and Typekit do not load there and text metrics fall back —
-button widths read 1–2px wide and nothing else should differ.
+Every expectation carries the reason it holds that number, so a ✗ says which
+of the page and the expectation is wrong. Keep that up: an expectation without
+a reason is one nobody can act on later.
+
+Its limits, which matter as much as its coverage:
+
+- **One engine.** Chromium is what measures. The footer link list closing up
+  after a tap was a Safari-only reading of the cap trim, and Chromium still
+  reports that page as correct. A green run is not cross-browser evidence.
+- **Geometry only.** Nothing about colour, type, motion, or whether the thing
+  in the box is the right thing.
+- **Text metrics are loose.** Rows tagged `font` are checked to 2px, since New
+  Science and IBM Plex Mono come over the network and fall back offline. The
+  run's header says which families were actually there.
+
+Diagram centring is measured rather than eyeballed: walk the SVG's shapes
+(skipping `<text>` and `<defs>`), union their `getBBox()` plus half the stroke
+width, and compare that centre to the frame's. The residual is what
+`--art-shift` cancels; all four sit at 0. The diagrams run on a 5s loop and
+spend the first fifth of it undrawn, so a screenshot showing only the origin
+dot is a timing artifact, not a broken illustration.
 
 ## Decided
 

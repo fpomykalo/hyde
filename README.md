@@ -64,8 +64,30 @@ index.html          markup for the whole page
 styles/tokens.css   colours, type stacks, canvas metrics, motion
 styles/main.css     layout and components
 scripts/main.js     nav theme, reveals, campfire tabs, carousel, marquees
+tools/measure.js    the layout check — see below
 assets/             artwork — see assets/README.md
 ```
+
+## Checking a change
+
+```sh
+npm install --no-save playwright && npx playwright install chromium   # once
+node tools/measure.js
+```
+
+It renders the page in headless Chromium at 1440x900, 393x852 and 430x932,
+and measures 200 things: the desktop column against the Figma coordinates, and
+the mobile frame against the rules it is meant to follow — one 16px gutter,
+full bleed where Figma draws it edge to edge, the cards holding a ratio rather
+than a pinned height, the illustrations centred on their drawing rather than
+their bounding box. It serves the repo itself, so nothing needs to be running.
+Only failures print; add `-v` to see everything, or pass `desktop` / `mobile`
+to run one suite.
+
+Every expectation carries the reason it is that number, so a failure tells you
+which of the two is wrong. Two limits worth knowing: it is one engine, so
+anything only Safari gets wrong is invisible to it, and it checks geometry
+only — not colour, type, motion, or whether a thing is the right thing.
 
 ## Behaviour
 
