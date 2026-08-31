@@ -661,9 +661,13 @@
         { duration: seconds * 1000, easing: 'linear', iterations: Infinity }
       );
 
-      var strip = track.closest('.logostrip');
-      strip.addEventListener('mouseenter', function () { anim.pause(); });
-      strip.addEventListener('mouseleave', function () { anim.play(); });
+      // Only where a pointer can actually hover: a tap fires mouseenter and
+      // then nothing until you touch elsewhere, which parks the strip.
+      if (window.matchMedia('(hover: hover)').matches) {
+        var strip = track.closest('.logostrip');
+        strip.addEventListener('mouseenter', function () { anim.pause(); });
+        strip.addEventListener('mouseleave', function () { anim.play(); });
+      }
     }
   );
 

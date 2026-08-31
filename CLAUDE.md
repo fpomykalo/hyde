@@ -48,6 +48,18 @@ assets/             see assets/README.md
   br` and `.br-mobile` are `display: none` on the layout that doesn't want
   them, which closed "Manifesto." up against "Own". Author the space before
   the tag — it collapses at the end of a line where the break does show.
+- **Put the cap trim on the block that owns the line.** Trimming a block whose
+  lines belong to *child* blocks is read differently by the two engines:
+  Chromium shortens the box and leaves the text, Safari pulls the text down
+  into the shortened box, and only on a later relayout — so `.footer__links`
+  looked right until a tap and then "Home" dropped ~6px into "Platform". The
+  trim now sits on the end `<li>`s (`trim-start` / `trim-end`), the same
+  single-line case as every heading on the page. A `.cap` on a container whose
+  children are blocks is the shape to look for.
+- **Hover states are gated on `@media (hover: hover)`.** A tap latches `:hover`
+  on a phone until you touch something else, which is what left a followed
+  footer link sitting at half opacity. The marquee's pause-on-hover listeners
+  are gated the same way in `scripts/main.js`.
 - **`overflow-x: hidden` on `body` makes it a scroll container.** `hidden` on
   one axis forces the other to compute `auto`, so `<body>` competes with the
   document for the scroll, and an in-page link nudges it a few pixels instead

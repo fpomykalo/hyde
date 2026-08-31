@@ -203,7 +203,13 @@ a {
 .btn--outline-white { box-shadow: inset 0 0 0 1px var(--white); color: var(--white); }
 .btn--accent        { background: var(--accent); color: var(--white); }
 
-.btn--outline-black:hover { background: var(--black); color: var(--white); }
+/* Hover states are gated on a device that actually hovers. A tap on a phone
+   leaves :hover latched on the thing you tapped until you touch something
+   else — which is what left a footer link sitting at half opacity after you
+   followed it. */
+@media (hover: hover) {
+  .btn--outline-black:hover { background: var(--black); color: var(--white); }
+}
 
 /* Small underlined mono link used at the foot of every image card */
 .card-link {
@@ -282,9 +288,11 @@ a {
   transition: transform 700ms var(--ease-out);
 }
 
-.card:hover .card__media img,
-.card:hover .card__media .asset {
-  transform: scale(1.0857);
+@media (hover: hover) {
+  .card:hover .card__media img,
+  .card:hover .card__media .asset {
+    transform: scale(1.0857);
+  }
 }
 
 .card__overlay {
@@ -325,7 +333,9 @@ a {
     linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
 }
 
-.card:hover .card__overlay--hover { opacity: 1; }
+@media (hover: hover) {
+  .card:hover .card__overlay--hover { opacity: 1; }
+}
 
 /* A grouping hook for mobile, where the chips, copy and link move out from
    over the image into a bordered box beneath it. On desktop it is transparent
@@ -362,7 +372,9 @@ a {
   transition: background-color var(--hover-dur) var(--ease-out);
 }
 
-.card:hover .dot { background: currentColor; }
+@media (hover: hover) {
+  .card:hover .dot { background: currentColor; }
+}
 
 /* --------------------------------------------------------------------------
    Navigation
@@ -684,18 +696,20 @@ a {
 }
 .paths__btn   { position: absolute; left: 21px; top: 439px; }
 
-/* Card CTA flips from outlined-white to solid accent on hover */
-.card:hover .paths__btn {
-  background: var(--accent);
-  box-shadow: inset 0 0 0 1px var(--accent);
-  color: var(--white);
-}
+@media (hover: hover) {
+  /* Card CTA flips from outlined-white to solid accent on hover */
+  .card:hover .paths__btn {
+    background: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+    color: var(--white);
+  }
 
-/* Card chip flips from outlined-white to solid white on hover */
-.card:hover .paths__chip {
-  background: var(--white);
-  box-shadow: inset 0 0 0 1px var(--white);
-  color: var(--black);
+  /* Card chip flips from outlined-white to solid white on hover */
+  .card:hover .paths__chip {
+    background: var(--white);
+    box-shadow: inset 0 0 0 1px var(--white);
+    color: var(--black);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1236,8 +1250,37 @@ a {
   color: var(--black);
 }
 
+/* The cap trim goes on the end items, not on the <ul>.
+   Trimming a block whose lines belong to *child* blocks is the one case the
+   engines read differently: Chromium shortens the box and leaves the text
+   where it was, Safari pulls the text down into the shortened box — and only
+   on a later relayout, so the list sat right until a tap and then "Home"
+   dropped ~6px, closing the gap above "Platform". Trimming each end line on
+   its own single-line <li> is the case both agree on, because there the box
+   top *is* the cap top and the text has nowhere else to go. The block still
+   measures cap-top to last baseline, so nothing moves. */
+.footer__links li:first-child {
+  text-box: trim-start cap alphabetic;
+  text-box-trim: trim-start;
+  text-box-edge: cap alphabetic;
+}
+
+.footer__links li:last-child {
+  text-box: trim-end cap alphabetic;
+  text-box-trim: trim-end;
+  text-box-edge: cap alphabetic;
+}
+
+/* a one-link column is both ends at once */
+.footer__links li:only-child {
+  text-box: trim-both cap alphabetic;
+  text-box-trim: trim-both;
+}
+
 .footer__links a { transition: opacity 300ms var(--ease-out); }
-.footer__links a:hover { opacity: 0.5; }
+@media (hover: hover) {
+  .footer__links a:hover { opacity: 0.5; }
+}
 
 .footer__badges {
   display: flex;

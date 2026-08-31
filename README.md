@@ -101,6 +101,9 @@ track can actually reach rather than the cards, since the last card can't scroll
 to the left edge — four industries give three pages. Adding industries adds
 pages.
 
+Hover states only apply where a pointer can hover, so a tap doesn't leave a
+card or a link latched in its hover state.
+
 **Cards** — Two Paths, Industries and Blog share one hover: the overlay darkens,
 the artwork scales to 1.0857, and on the Two Paths cards the chip goes solid
 white and the CTA goes solid accent, per the Figma component variants.
