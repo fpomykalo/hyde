@@ -101,6 +101,9 @@ a {
    -------------------------------------------------------------------------- */
 
 /* Section H2 — New Science Medium 60/80, -1.2 tracking */
+/* A break the mobile frame wants and the 1440 column does not. */
+.br-mobile { display: none; }
+
 .h2 {
   position: absolute;
   left: 100px;
@@ -905,7 +908,9 @@ a {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(calc(-50% + var(--art-shift, 0px)), -50%) scale(var(--art-scale, 1));
+  transform:
+    translate(calc(-50% + var(--art-shift, 0px) * var(--art-scale, 1)), -50%)
+    scale(var(--art-scale, 1));
   z-index: 1;
 }
 
@@ -978,6 +983,12 @@ a {
 .industries__card .card-index { top: 20px; right: 20px; }
 
 .ind__title { left: 20px; top: 20px; }
+
+/* Anchored by its foot: `top` is where the last line's baseline sits and the
+   block grows upward, so a two- or three-line title fills the space above the
+   image's edge instead of running past it. */
+.ind__title,
+.blog__title { transform-origin: left bottom; }
 
 .ind__chips {
   position: absolute;

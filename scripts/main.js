@@ -513,8 +513,10 @@
     // a horizontal one takes the gesture. Without that the track jitters
     // sideways under every vertical scroll that begins on a card.
     var down = false, locked = false, dragging = false;
-    var startX = 0, startY = 0, startOffset = 0, moved = 0;
-    var LOCK = 6;
+    var startX = 0, startY = 0, startOffset = 0, moved = 0, startTime = 0;
+    var LOCK = 6;         // px before the gesture commits to an axis
+    var TAKE = 0.25;      // a quarter of a card is enough to turn the page
+    var FLICK_MS = 300;   // …or any quick flick, however short
 
     viewport.addEventListener('pointerdown', function (e) {
       if (e.button !== 0 || maxOffset <= 0) return;
@@ -525,6 +527,7 @@
       startX = e.clientX;
       startY = e.clientY;
       startOffset = offsetFor(index);
+      startTime = Date.now();
     });
 
     viewport.addEventListener('pointermove', function (e) {
@@ -549,13 +552,28 @@
       track.style.transform = 'translateX(' + -offset + 'px)';
     });
 
+    // Snapping on the nearest card means letting go at 49% springs back, which
+    // reads as the carousel refusing the swipe. A quarter of a card carries it,
+    // and so does a flick of any length; drag further and it still lands on
+    // whichever card you dragged to.
     function endDrag() {
       down = false;
       if (!dragging) return;
       dragging = false;
       viewport.classList.remove('is-dragging');
-      var offset = Math.max(0, Math.min(maxOffset, startOffset - moved));
-      goTo(Math.min(pageCount - 1, Math.round(offset / step)));
+
+      var pages = -moved / step;               // + forward, - back
+      var flick = Date.now() - startTime < FLICK_MS && Math.abs(moved) > LOCK;
+      var target;
+
+      if (Math.abs(pages) > TAKE || flick) {
+        target = index + (pages > 0
+          ? Math.max(1, Math.round(pages))
+          : Math.min(-1, Math.round(pages)));
+      } else {
+        target = index;
+      }
+      goTo(target);
     }
 
     viewport.addEventListener('pointerup', endDrag);

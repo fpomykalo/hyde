@@ -93,7 +93,10 @@ a gradient with its animated diagram inlined over it; the diagrams' keyframes
 live in `styles/diagrams.css`.
 
 **Industries** — a carousel: chevrons appear only where there's somewhere to go,
-dots jump to a page, and the track can be dragged. Dots count the positions the
+dots jump to a page, and the track can be dragged or swiped. A swipe turns the
+page once it passes a quarter of a card, or on any quick flick; drag further and
+it lands on whichever card you dragged to. The gesture commits to an axis over
+the first 6px, so a vertical scroll that starts on a card scrolls the page. Dots count the positions the
 track can actually reach rather than the cards, since the last card can't scroll
 to the left edge — four industries give three pages. Adding industries adds
 pages.
@@ -114,7 +117,8 @@ is eyebrow → heading → lede → CTA → content.
 What changes beyond type and spacing:
 
 - **Nav** collapses to the logo and a hamburger. Figma draws only the closed
-  state, so the open panel is built from the same links.
+  state, so the open panel is built from the same links: a half-transparent
+  white ground with the page blurred behind it, the buttons themselves solid.
 - **Campfire** drops the tabs: all four blocks stack, each with its
   illustration full-bleed above its own text.
 - **Industries and Blog cards** move their chips, copy and link out from over
@@ -123,7 +127,9 @@ What changes beyond type and spacing:
   two for the two articles.
 - **Two Paths cards** keep their text over the image, and hold the desktop
   card's 641:500 ratio by `aspect-ratio` rather than a fixed height, so they
-  don't flatten on a phone wider than 393.
+  don't flatten on a phone wider than 393. A full-bleed rule separates the two.
+- **Card titles** hang from the foot of the image and grow upward, so a title
+  of any depth fills the space above rather than running into the box below.
 - **Logo strips** sit inside the gutter with four cells instead of seven, and
   their labels drop to the eyebrow's 10px.
 - **Campfire** shows the rule under each title as a plain hairline — there are

@@ -44,6 +44,13 @@ assets/             see assets/README.md
   `z-index` — see the hero, where the video covered the headline. A `.reveal`
   masks this until it finishes: its `translateY` makes a stacking context, and
   the text vanishes at the exact moment the transform is cleared.
+- **A `<br>` hidden at a breakpoint takes its space with it.** `.card__title
+  br` and `.br-mobile` are `display: none` on the layout that doesn't want
+  them, which closed "Manifesto." up against "Own". Author the space before
+  the tag — it collapses at the end of a line where the break does show.
+- **`--art-shift` rides `--art-scale`.** A nudge tuned on the 1440 column is
+  in unscaled pixels; mobile draws the same diagram at 0.42, so the shift has
+  to be multiplied by the scale or it lands 2.4x too far.
 - **Carousels need `touch-action: pan-y`.** Without it the browser claims a
   horizontal swipe as a scroll and kills the drag with `pointercancel` after
   the first `pointermove`.
@@ -102,3 +109,6 @@ button widths read 1–2px wide and nothing else should differ.
   (campfire illustrations, the rules between jobs) stay edge to edge as drawn.
 - Figma's mobile careers list shows three jobs; the build carries the desktop
   frame's five.
+- Campfire tab 1's diagram sits 20px left of centre on desktop (8px on mobile)
+  — the cloud drawing is off-centre inside its own viewBox. Tabs 2, 3 and 4
+  are centred to within 3px. Fixable with an `--art-shift` if it reads wrong.

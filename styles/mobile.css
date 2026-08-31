@@ -30,12 +30,15 @@
     width: 100%;
   }
 
+  /* 30px top and bottom: in the mobile frame every section's rule sits 30px
+     clear of the content on either side of it. The rule itself is this
+     border-top; the section above pays for the gap below its own content. */
   .section {
     height: auto;
     margin-top: 0;
     display: flex;
     flex-direction: column;
-    padding: 30px 16px 0;
+    padding: 30px 16px;
     border-top: 1px solid var(--hairline);
   }
 
@@ -49,6 +52,8 @@
   .section-lede     { position: static; order: 4; }
   .careers__cta,
   .blog__cta        { position: static; order: 9; align-self: flex-start; }
+
+  .br-mobile { display: inline; }
 
   .h2 {
     font-size: 36px;
@@ -123,7 +128,9 @@
     position: fixed;
     inset: 0;
     padding: 90px 16px 16px;
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     opacity: 0;
     visibility: hidden;
     transition: opacity 300ms var(--ease-out), visibility 0s linear 300ms;
@@ -175,6 +182,17 @@
 
   .hero__bg { left: 0; width: 100%; }
 
+  /* The mock frames the mark larger and high in the viewport; `cover` alone
+     puts it small and central. The lift is a percentage of the hero's own
+     height rather than a pixel count, so the scale that keeps the frame
+     covered (anything over 1.384) holds on a short phone too — at a fixed
+     pixel lift a shorter viewport bares a band along the bottom. */
+  .hero__bg img,
+  .hero__bg video,
+  .hero__bg .asset {
+    transform: translateY(-19.2%) scale(1.4);
+  }
+
   /* The video is an absolutely positioned sibling, so it paints above anything
      the mobile layout leaves in normal flow. The reveal masked that: its
      translate makes a stacking context, and the text vanished the instant the
@@ -213,9 +231,10 @@
     white-space: normal;
   }
 
-  /* Leading minus cap height, so the two elements read as consecutive lines
-     of one headline rather than two blocks. */
-  .hero__line--two { margin-top: 11px; }
+  /* Leading minus cap height, so the two elements read as consecutive lines of
+     one headline rather than two blocks — plus 5px, because at this size the
+     "p" of Stop Renting lands on the "l" of Intelligence. */
+  .hero__line--two { margin-top: 16px; }
 
   .hero__lede {
     width: auto;
@@ -253,7 +272,14 @@
   }
 
   .logostrip__viewport { left: 111px; }
-  .logostrip__tile     { width: 112px; }
+
+  /* The tile keeps its desktop 60px inside a 45px strip, which is what drops
+     the logos below the centre line. Both the tiles and the label are centred
+     on the strip's own axis. */
+  .logostrip__tile {
+    width: 112px;
+    height: 100%;
+  }
 
   .logostrip__tile img,
   .logostrip__tile .asset { transform: scale(0.62); }
@@ -262,6 +288,8 @@
      re-wrapping to three lines inside the 112px label cell. */
   .logostrip__label {
     left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 10px;
     line-height: 13px;
     letter-spacing: 1px;
@@ -275,7 +303,8 @@
      out of its 112px cell into the first logo. */
   .logostrip--hero .logostrip__label,
   .logostrip--careers .logostrip__label {
-    top: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 10px;
     line-height: 13px;
     letter-spacing: 1px;
@@ -369,7 +398,22 @@
     margin-top: 16px;
   }
 
-  .paths__card--one { margin-top: 30px; }
+  .section--paths .paths__card--one { margin-top: 30px; }
+
+  /* Figma rules the two models apart with a full-bleed line, 16px clear of
+     each card. Drawn on the second card so it can break the gutter without a
+     wrapper of its own. */
+  .section--paths .paths__card--two { margin-top: 32px; }
+
+  .paths__card--two::before {
+    content: "";
+    position: absolute;
+    left: -16px;
+    right: -16px;
+    top: -16px;
+    height: 1px;
+    background: var(--hairline);
+  }
 
   /* These two keep their text over the image, so the card is just the media.
      Ratio rather than a fixed height: Figma's 361 x 281 is the desktop card's
@@ -492,10 +536,23 @@
     margin-left: 0;
   }
 
-  /* Only the index and title stay on the image */
-  /* 17px clear of the image's foot, measured from the card top so the info
-     box below it doesn't move them. */
-  .ind__title { left: 17px; top: 243px; bottom: auto; }
+  /* Only the index and title stay on the image. Anchored by the foot — `top`
+     is the last line's baseline, 17px clear of the image's edge, and the block
+     grows upward — so a title of two or three lines fills the space above
+     rather than running past the image into the box below it. */
+  .ind__title,
+  .blog__title {
+    left: 17px;
+    right: 17px;
+    top: 264px;
+    bottom: auto;
+    transform: translateY(-100%);
+  }
+
+  /* The breaks in the markup are cut for the 641px desktop card. In a 327px
+     column they land mid-phrase and the line after them re-wraps anyway, so
+     the title is left to find its own breaks. */
+  .card__title br { display: none; }
 
   .ind__copy,
   .ind__link { position: static; }
@@ -508,8 +565,12 @@
     order: 7;
     display: flex;
     align-self: center;
-    margin: 20px 0 0;
+    margin: 16px 0 0;
   }
+
+  /* Industries ends on its dots, and the frame puts them 16px off the card
+     above and 16px off the rule below — not the 30px the other sections take. */
+  .section--industries { padding-bottom: 16px; }
 
   /* ---------------------------------------------------------------- careers */
 
@@ -560,7 +621,7 @@
     margin-top: 17px;
   }
 
-  .careers__cta { margin: 30px 0; }
+  .careers__cta { margin: 30px 0 0; }
 
   /* ------------------------------------------------------------------- blog */
 
@@ -588,8 +649,6 @@
 
   .blog__chips { position: static; padding: 17px 0 0 17px; }
 
-  .blog__title { left: 17px; top: 213px; bottom: auto; }   /* two lines */
-
   /* The chips sit over the image, so put them back on top of the media */
   .section--blog .blog__chips {
     position: absolute;
@@ -598,7 +657,7 @@
     padding: 0;
   }
 
-  .blog__cta { margin: 30px 0; }
+  .blog__cta { margin: 60px 0 0; }
 
   /* ----------------------------------------------------------------- footer */
 
@@ -612,7 +671,7 @@
     margin-left: 0;
     height: auto;
     min-height: 0;
-    padding: 17px 16px 30px;
+    padding: 70px 16px 30px;
     border-top: 0;
     min-height: 100vh;
     min-height: 100dvh;
@@ -657,8 +716,7 @@
     gap: 7.8%;
     order: 7;
     width: 100%;
-    margin-top: auto;
-    padding-top: 60px;
+    margin-top: 70px;
   }
 
   .footer__mark {
@@ -679,7 +737,12 @@
     bottom: auto;
   }
 
-  .footer__legal--privacy { margin-top: 90px; padding-top: 20px; border-top: 1px solid var(--hairline); align-self: stretch; }
+  .footer__legal--privacy {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--hairline);
+    align-self: stretch;
+  }
   .footer__legal--terms,
   .footer__legal--sla     { margin-top: 10px; }
   .footer__legal--copy    { margin-top: 30px; }
