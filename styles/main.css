@@ -92,13 +92,13 @@ a {
   margin-left: calc(50% - var(--vw) / 2);
 }
 
-.section--hero       { height: 100vh; min-height: 620px; }
+.section--hero       { height: var(--vh, 100vh); min-height: 620px; }
 .section--paths      { height: 623px; margin-top: 50px; }
 .section--campfire   { height: 776px; margin-top: 49px; }
 .section--industries { height: 651px; margin-top: 49px; }
 .section--careers    { height: 592px; margin-top: 50px; }
 .section--blog       { height: 662px; margin-top: 50px; }
-.section--footer     { height: 100vh; min-height: 720px; margin-top: 50px; }
+.section--footer     { height: var(--vh, 100vh); min-height: 720px; margin-top: 50px; }
 
 /* --------------------------------------------------------------------------
    Shared type roles
@@ -383,6 +383,13 @@ a {
 /* An in-page link lands the section's top edge at the foot of the fixed bar,
    rather than 53px underneath it. */
 .section { scroll-margin-top: 53px; }
+
+/* Between the mobile breakpoint and 1440 the column is zoomed to fit the
+   window rather than clipped — see syncViewport() in scripts/main.js. The bar
+   is a sibling of .page, so it takes the same zoom. `zoom` scales layout, so
+   the document height and the fixed bar follow it; a transform would not. */
+.nav,
+.page { zoom: var(--fit, 1); }
 
 .nav {
   position: fixed;

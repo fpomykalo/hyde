@@ -23,12 +23,29 @@
      this never runs.
      ---------------------------------------------------------------------- */
 
+  var CANVAS = 1440;   // the desktop column's width, and --canvas-w
+  var MOBILE = 900;    // where styles/mobile.css takes over
+
   function syncViewport() {
     var d = document.documentElement;
     var w = d.clientWidth;
     var h = d.clientHeight;
-    d.style.setProperty('--vw', w + 'px');
-    d.style.setProperty('--vh', h + 'px');
+
+    // Between the mobile breakpoint and 1440 there is no Figma frame to build
+    // from, and the fixed column does not fit. Rather than clip it — which
+    // loses the logo off the left and Contact off the right, and leaves the
+    // full-bleed video and footer offset, since their `50%` is half the column
+    // and not half the window — the whole column is zoomed to fit. `zoom`
+    // rather than a transform, because it scales layout rather than paint: the
+    // document height, the scrollbar and the fixed bar all follow it.
+    var fit = (w > MOBILE && w < CANVAS) ? w / CANVAS : 1;
+    d.style.setProperty('--fit', fit);
+
+    // Inside a zoomed box, lengths are in page units. At `fit` the window is
+    // exactly one canvas wide by definition, and this is what makes the
+    // full-bleed rules land: `calc(50% - var(--vw) / 2)` cancels to zero.
+    d.style.setProperty('--vw', (fit === 1 ? w : CANVAS) + 'px');
+    d.style.setProperty('--vh', h / fit + 'px');
   }
   syncViewport();
 
@@ -460,18 +477,29 @@
 
     // Measured rather than hardcoded: desktop lays the cards out at 524 wide on
     // a 523 step (they share a border), mobile gives each one the full width.
+    // offsetWidth/offsetLeft, not getBoundingClientRect: the rect is in real
+    // screen pixels, and under `zoom` those are smaller than the page units
+    // the transform below is written in. Measuring in one and writing in the
+    // other under-scrolls the track by exactly the zoom factor.
     function measure() {
-      var vpW = viewport.getBoundingClientRect().width;
-      var first = cards[0].getBoundingClientRect();
+      var vpW = viewport.offsetWidth;
+      var firstW = cards[0].offsetWidth;
       step = cards.length > 1
-        ? Math.abs(cards[1].getBoundingClientRect().left - first.left) || first.width
-        : first.width;
-      var trackW = (cards.length - 1) * step + first.width;
+        ? Math.abs(cards[1].offsetLeft - cards[0].offsetLeft) || firstW
+        : firstW;
+      var trackW = (cards.length - 1) * step + firstW;
       maxOffset = Math.max(0, trackW - vpW);
       // Dots count the positions the track can actually reach. One card per
       // screen makes every card its own page; on desktop the last card cannot
       // reach the left edge, so there are fewer pages than cards.
       pageCount = maxOffset > 0 ? Math.min(cards.length, Math.ceil(maxOffset / step) + 1) : 1;
+    }
+
+    // A drag arrives in real screen pixels; the track moves in page units.
+    function pageUnits(px) {
+      var rect = cards[0].getBoundingClientRect().width;
+      var zoom = rect && cards[0].offsetWidth ? rect / cards[0].offsetWidth : 1;
+      return zoom ? px / zoom : px;
     }
 
     function offsetFor(i) {
@@ -546,7 +574,7 @@
 
     viewport.addEventListener('pointermove', function (e) {
       if (!down) return;
-      var dx = e.clientX - startX;
+      var dx = pageUnits(e.clientX - startX);
       var dy = e.clientY - startY;
 
       if (!locked) {

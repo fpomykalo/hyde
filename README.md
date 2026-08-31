@@ -27,6 +27,11 @@ the pixel.
 | Blog | 662 | Fixed 1440 column |
 | Footer | 100vh | Full-bleed, rearranges |
 
+**Between 900 and 1440** the column is zoomed to fit the window, so the design
+stays whole rather than being clipped. Figma has a desktop frame and a mobile
+frame and nothing in between; scaling keeps every proportion as drawn, just
+smaller. Above 1440 nothing scales and the column centres as before.
+
 **Hero** is as tall as the viewport, and the video behind it spans the viewport's
 full width at any size. Everything else — logo, nav, headline, subtext, partner
 strip — stays at Figma's sizes inside the 1440 column. The content sits in two
@@ -75,7 +80,8 @@ npm install --no-save playwright && npx playwright install chromium   # once
 node tools/measure.js
 ```
 
-It renders the page in headless Chromium at 1440x900, 393x852 and 430x932,
+It renders the page in headless Chromium at 1440x900, 1100x900, 393x852 and
+430x932,
 and measures 200 things: the desktop column against the Figma coordinates, and
 the mobile frame against the rules it is meant to follow — one 16px gutter,
 full bleed where Figma draws it edge to edge, the cards holding a ratio rather

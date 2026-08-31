@@ -60,6 +60,13 @@ assets/             see assets/README.md
   on a phone until you touch something else, which is what left a followed
   footer link sitting at half opacity. The marquee's pause-on-hover listeners
   are gated the same way in `scripts/main.js`.
+- **Anything measured and written back must use page units under `zoom`.**
+  `getBoundingClientRect()` is real screen pixels; a value written into a
+  `transform` or a CSS length inside the zoomed page is in page units. Mixing
+  them under-scrolls by exactly the zoom factor. The carousel measures with
+  `offsetWidth` / `offsetLeft` and converts pointer deltas with `pageUnits()`;
+  the marquee already used `offsetWidth`. Comparisons that never leave the
+  screen frame — the nav theme, the logo luminance — are fine as rects.
 - **`overflow-x: hidden` on `body` makes it a scroll container.** `hidden` on
   one axis forces the other to compute `auto`, so `<body>` competes with the
   document for the scroll, and an in-page link nudges it a few pixels instead
@@ -89,6 +96,15 @@ assets/             see assets/README.md
   stylesheet and cannot be undone at a breakpoint.
 
 ## Layout model
+
+Between 900 and 1440 there is no Figma frame and the fixed column doesn't fit,
+so `syncViewport()` zooms `.nav` and `.page` by `clientWidth / 1440`. `zoom`,
+not a transform: it scales layout, so the document height, the scrollbar and
+the fixed bar all follow. Inside the zoom, lengths are page units and the
+window is exactly one canvas wide, which is why `--vw` is set to 1440 there —
+that is what makes `calc(50% - var(--vw) / 2)` cancel to zero and the
+full-bleed rules land. `--vh` is the window height in page units, and the hero
+and footer read it rather than `100vh`.
 
 Desktop is a fixed 1440 column; sections are blocks at their Figma heights with
 children absolutely positioned at their Figma offsets. At 1440 × 900 the page

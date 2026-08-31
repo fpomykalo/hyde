@@ -5,6 +5,7 @@
      node tools/measure.js            both layouts
      node tools/measure.js desktop    just the 1440 column
      node tools/measure.js mobile     just the 393 frame
+     node tools/measure.js fit        just the zoomed band between the two
      node tools/measure.js -v         list what passed as well as what did not
 
    There is no test suite for a static page, and there is no sensible unit to
@@ -317,6 +318,44 @@ const MOBILE = String(function collect() {
 });
 
 /* ==========================================================================
+   Between the breakpoints — the column zoomed to fit
+
+   There is no Figma frame between 900 and 1440 and the fixed column does not
+   fit, so it is zoomed down to the window. Before that, three things disagreed
+   about where centre was: the bar was centred on the window, the column pinned
+   itself left because auto margins cannot centre a box wider than its
+   container, and the full-bleed video and footer took `50%` of the column
+   rather than of the window. The logo went off the left, Contact off the
+   right, and the video sat inset. These check it stays honest.
+   ========================================================================== */
+
+const FIT = String(function fit() {
+  const out = [];
+  const t = (label, got, exp, tol) => out.push([label, +Number(got).toFixed(3), exp, tol || 0.6]);
+  const W = document.documentElement.clientWidth;
+  const R = s => document.querySelector(s).getBoundingClientRect();
+
+  t('the column is zoomed to the window',
+    +getComputedStyle(document.documentElement).getPropertyValue('--fit'), W / 1440, 0.002);
+
+  // Everything that is meant to span the window actually does.
+  ['.nav', '.hero__bg', '.section--footer'].forEach(sel => {
+    t(sel + ' starts at the left edge', R(sel).left, 0);
+    t(sel + ' ends at the right edge', R(sel).right, W);
+  });
+
+  // …and the two ends of the bar are on screen, which is what you lose first.
+  t('the logo is on screen', R('.nav__logo').left > 0 ? 1 : 0, 1);
+  t('Contact is on screen', R('.nav__item--contact').right <= W + 0.5 ? 1 : 0, 1);
+
+  t('nothing overflows sideways', document.documentElement.scrollWidth, W);
+  t('hero fills the viewport', R('.section--hero').height, window.innerHeight, 1);
+  t('footer fills the viewport', R('.section--footer').height, window.innerHeight, 1);
+
+  return out;
+});
+
+/* ==========================================================================
    Illustrations — centred on the drawing, not on the SVG's bounding box
 
    The labels sit outside the artwork and lopsidedly, so the centre that
@@ -440,6 +479,46 @@ async function desktop(browser, url, tally) {
 // Twice, at two widths. Several of these only break away from 393 — a card
 // with its height pinned instead of its ratio is exactly right at 393 and
 // visibly flat at 430, which is the phone most people are holding.
+// The carousel measures in layout units and writes them back; under zoom the
+// rect it would otherwise have measured is smaller by the zoom factor, so a
+// page turn would fall short. Driven rather than measured, because that is the
+// only way to catch it.
+async function fitBand(browser, url, tally, width) {
+  const page = await open(browser, url, width, 900);
+  console.log('\nBetween the breakpoints — ' + width + ' x 900, column zoomed to fit');
+  const rows = (await page.evaluate('(' + FIT + ')()')).map(([label, got, exp, tol]) =>
+    Math.abs(got - exp) <= tol
+      ? { label, ok: true }
+      : { label, ok: false, detail: 'got ' + got + ', expected ' + num(exp) + ' (off by ' + num(got - exp) + ')' });
+  report(rows, tally);
+
+  const LABEL = 'a carousel page turn moves exactly one card';
+  try {
+    await page.evaluate(() => document.querySelector('.industries__viewport').scrollIntoView({ block: 'center' }));
+    await page.waitForTimeout(400);
+    const before = await page.evaluate(() => document.querySelector('.industries__card').getBoundingClientRect().left);
+    // 4s, not the 30s default: when this fails it is usually because the arrow
+    // has been pushed off screen, and a broken layout should report rather
+    // than hang.
+    await page.click('#ind-next', { timeout: 4000 });
+    await page.waitForTimeout(900);
+    const after = await page.evaluate(() => ({
+      left: document.querySelector('.industries__card').getBoundingClientRect().left,
+      cardW: document.querySelector('.industries__card').getBoundingClientRect().width,
+    }));
+    const moved = before - after.left;
+    report([Math.abs(moved - after.cardW) <= 2
+      ? { label: LABEL, ok: true }
+      : { label: LABEL, ok: false,
+          detail: 'moved ' + Math.round(moved) + 'px, a card is ' + Math.round(after.cardW) + 'px' }], tally);
+  } catch (e) {
+    report([{ label: LABEL, ok: false,
+      detail: 'could not drive the carousel — ' + String(e.message).split('\n')[0]
+              + '\n       (the arrow is usually off screen when the column does not fit)' }], tally);
+  }
+  await page.close();
+}
+
 async function mobile(browser, url, tally, width, height) {
   const page = await open(browser, url, width, height);
   const gone = await missingFonts(page);
@@ -465,7 +544,8 @@ async function mobile(browser, url, tally, width, height) {
   const tally = { pass: 0, fail: 0, skipped: 0 };
   try {
     if (which !== 'mobile') await desktop(browser, url, tally);
-    if (which !== 'desktop') {
+    if (which === 'both' || which === 'fit') await fitBand(browser, url, tally, 1100);
+    if (which !== 'desktop' && which !== 'fit') {
       await mobile(browser, url, tally, 393, 852);
       await mobile(browser, url, tally, 430, 932);
     }
