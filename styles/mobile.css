@@ -372,6 +372,7 @@
 
   .campfire__body {
     position: static;
+    pointer-events: auto;   /* nothing overlaps it here; it is in flow */
     order: 6;
     margin: 30px -16px 0;
     width: calc(100% + 32px);

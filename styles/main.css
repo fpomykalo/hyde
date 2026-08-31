@@ -737,10 +737,10 @@ a {
   font-size: 10px;
   letter-spacing: 1px;
   font-feature-settings: "ss04" 1;
-  color: var(--black);
+  color: var(--ink-30);
 }
 
-.campfire__tab.is-active .campfire__tab-index { color: var(--ink-30); }
+.campfire__tab.is-active .campfire__tab-index { color: var(--black); }
 
 .campfire__tab-title {
   position: absolute;
@@ -763,7 +763,13 @@ a {
 /* Each item pairs one illustration with its text. On desktop the wrapper is
    transparent to layout and the two halves are placed into the stage and the
    panel; on mobile the item becomes a block and they stack. */
-.campfire__body { position: absolute; inset: 0; }
+/* The body spans the whole section so its two halves can be placed into the
+   panel and the stage. Being a later sibling, it would sit over the tabs and
+   swallow their clicks, so it passes pointer events through and the halves
+   take them back. */
+.campfire__body { position: absolute; inset: 0; pointer-events: none; }
+.campfire__pane,
+.campfire__frame { pointer-events: auto; }
 .campfire__item { display: contents; }
 
 .campfire__pane {

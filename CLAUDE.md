@@ -35,6 +35,11 @@ assets/             see assets/README.md
 - **An absolutely positioned background paints above in-flow content.** The
   footer ground is a background on the section, not a positioned child, for
   exactly this reason.
+- **A full-section wrapper eats clicks behind it.** `.campfire__body` is
+  `inset: 0` so its two halves can be placed into the panel and the stage; as a
+  later sibling it covered the tabs and swallowed every click. It carries
+  `pointer-events: none`, and `.campfire__pane` / `.campfire__frame` take them
+  back.
 - **Card offsets live in CSS, not inline styles** — inline `left` beats any
   stylesheet and cannot be undone at a breakpoint.
 
@@ -62,11 +67,15 @@ and measuring against the Figma coordinates. Note the sandbox has no network,
 so Google Fonts and Typekit do not load there and text metrics fall back —
 button widths read 1–2px wide and nothing else should differ.
 
+## Decided
+
+- **AI Natives copy.** Figma's editorial note read "the training control plane
+  (or: exoskeleton/workbench)". Resolved to *exoskeleton*.
+- **The fixed nav overlaps section headings** when scrolling past them. Figma
+  has no nav background and no scrolled state; left as drawn.
+- **Campfire tab numbers.** The active tab's index is solid black, the other
+  three sit at 30% (`--ink-30`).
+
 ## Open
 
-- AI Natives copy still carries an unresolved editorial note: Figma reads
-  "the training control plane (or: exoskeleton/workbench)". The parenthetical
-  is dropped in the build.
-- The fixed nav overlaps section headings when scrolling past them. Figma has
-  no nav background and no scrolled state, so this is a design decision.
 - Campfire gradient pairings are a best guess; six were supplied for four tabs.

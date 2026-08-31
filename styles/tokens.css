@@ -35,7 +35,7 @@
   --hairline: #e5e5e5;         /* every 1px rule and section border           */
   --chip-fill: rgba(0, 0, 0, 0.1);   /* eyebrow + metadata chips on light     */
   --ink-20: rgba(0, 0, 0, 0.2);      /* section intro paragraphs              */
-  --ink-30: rgba(0, 0, 0, 0.3);      /* active campfire tab index             */
+  --ink-30: rgba(0, 0, 0, 0.3);      /* inactive campfire tab index           */
   --ink-40: rgba(0, 0, 0, 0.4);      /* campfire body copy + 1.1/1.2 markers  */
   --footer-bg: #f7f7f7;
   --footer-heading: #413d3c;
