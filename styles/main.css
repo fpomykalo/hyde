@@ -88,7 +88,7 @@ a {
 }
 
 .section--hero       { height: 100vh; min-height: 620px; }
-.section--paths      { height: 623px; margin-top: 153px; }
+.section--paths      { height: 623px; margin-top: 50px; }
 .section--campfire   { height: 776px; margin-top: 49px; }
 .section--industries { height: 651px; margin-top: 49px; }
 .section--careers    { height: 592px; margin-top: 50px; }
@@ -373,8 +373,10 @@ a {
   height: 31px;
 }
 
-/* Both logo colourways are stacked; the active theme cross-fades between them,
-   so the mark flips black/white with the background underneath the bar. */
+/* Both colourways are stacked and cross-faded. Which one shows is decided by
+   the measured luminance of whatever surface is under the mark — see
+   scripts/main.js — not by the bar's own theme, so the logo stays legible over
+   a photo sitting inside an otherwise light section. */
 .nav__logo img,
 .nav__logo .asset {
   position: absolute;
@@ -387,8 +389,8 @@ a {
 .nav__logo .logo--light { opacity: 1; }  /* white mark, for dark backgrounds */
 .nav__logo .logo--dark  { opacity: 0; }  /* black mark, for light backgrounds */
 
-.nav.is-light .nav__logo .logo--light { opacity: 0; }
-.nav.is-light .nav__logo .logo--dark  { opacity: 1; }
+.nav.is-logo-dark .nav__logo .logo--light { opacity: 0; }
+.nav.is-logo-dark .nav__logo .logo--dark  { opacity: 1; }
 
 .nav__item {
   position: absolute;

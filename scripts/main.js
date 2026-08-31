@@ -148,6 +148,109 @@
   }
 
   /* ------------------------------------------------------------------------
+     2b. Logo colour
+
+     The bar's chrome follows the section it is over, but the mark sits at a
+     fixed spot and can end up on a photo inside an otherwise light section.
+     So it is decided separately, by measuring what is actually underneath.
+
+     Every surface that can pass beneath the bar is sampled once: images and
+     video are drawn to a small canvas and averaged over the strip the mark
+     occupies, then darkened by whatever overlay sits on top of them; plain
+     surfaces use their background colour. Under 50% relative luminance takes
+     the white lockup, at or over it the black one.
+     ---------------------------------------------------------------------- */
+
+  var logo = nav.querySelector('.nav__logo');
+
+  function luminanceOf(r, g, b) {
+    // sRGB -> linear, then Rec.709 luma
+    function lin(c) {
+      c /= 255;
+      return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    }
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+  }
+
+  function sampleMedia(el) {
+    var w = el.naturalWidth || el.videoWidth;
+    var h = el.naturalHeight || el.videoHeight;
+    if (!w || !h) return null;
+    try {
+      var c = document.createElement('canvas');
+      c.width = 8;
+      c.height = 8;
+      var ctx = c.getContext('2d', { willReadFrequently: true });
+      // Sample the top eighth — the band the mark actually overlaps
+      ctx.drawImage(el, 0, 0, w, Math.max(1, Math.round(h / 8)), 0, 0, 8, 8);
+      var d = ctx.getImageData(0, 0, 8, 8).data;
+      var sum = 0;
+      for (var i = 0; i < d.length; i += 4) sum += luminanceOf(d[i], d[i + 1], d[i + 2]);
+      return sum / (d.length / 4);
+    } catch (e) {
+      return null; // tainted canvas — fall back to the declared value
+    }
+  }
+
+  function parseBg(el) {
+    var m = getComputedStyle(el).backgroundColor.match(/[\d.]+/g);
+    if (!m || m.length < 3 || (m.length > 3 && parseFloat(m[3]) === 0)) return null;
+    return luminanceOf(+m[0], +m[1], +m[2]);
+  }
+
+  // Surfaces, shallowest first. `media` marks the ones covered edge to edge by
+  // a photo or video worth sampling; the rest are read from their background
+  // colour. Sampling a surface whose only image is a transparent logo would
+  // average the empty pixels and call a near-white panel black.
+  // `overlay` is the alpha of the dark wash over the media where the mark
+  // crosses it.
+  var surfaces = [];
+  function addSurface(el, opts) {
+    if (el) surfaces.push({
+      el: el, media: !!opts.media, overlay: opts.overlay || 0,
+      lum: opts.fallback, measured: false
+    });
+  }
+
+  addSurface(document.querySelector('.hero__bg'), { media: true, fallback: 0.05 });
+  Array.prototype.forEach.call(document.querySelectorAll('.card'), function (card) {
+    // Industries and Blog wash the top at 0.8; Two Paths at 0.4
+    var strong = card.querySelector('.card__overlay--strong');
+    addSurface(card, { media: true, overlay: strong ? 0.8 : 0.4, fallback: 0.15 });
+  });
+  addSurface(document.querySelector('.campfire__stage'), { media: true, fallback: 0.45 });
+  addSurface(document.querySelector('.section--footer'), { fallback: 0.94 });
+
+  function measureSurfaces() {
+    surfaces.forEach(function (s) {
+      if (s.measured) return;
+      var l = null;
+      if (s.media) {
+        var el = s.el.querySelector('img, video');
+        if (el) l = sampleMedia(el);
+      } else {
+        l = parseBg(s.el);
+      }
+      if (l === null || l === undefined) return;
+      s.lum = l * (1 - s.overlay);   // composite the dark wash over it
+      s.measured = true;
+    });
+  }
+
+  function syncLogo() {
+    if (!logo) return;
+    var r = logo.getBoundingClientRect();
+    var lum = 1;                      // page ground is white
+    for (var i = 0; i < surfaces.length; i++) {
+      var b = surfaces[i].el.getBoundingClientRect();
+      if (b.left < r.right && b.right > r.left && b.top < r.bottom && b.bottom > r.top) {
+        lum = surfaces[i].lum;        // later surfaces paint over earlier ones
+      }
+    }
+    nav.classList.toggle('is-logo-dark', lum >= 0.5);
+  }
+
+  /* ------------------------------------------------------------------------
      3. Reveal on scroll
      ---------------------------------------------------------------------- */
 
@@ -464,14 +567,24 @@
     ticking = true;
     requestAnimationFrame(function () {
       syncNavTheme();
+      syncLogo();
       ticking = false;
     });
   }
+
+  // Media decodes after first paint, so measure again once things settle
+  window.addEventListener('load', function () {
+    measureSurfaces();
+    syncLogo();
+  });
+  setTimeout(function () { measureSurfaces(); syncLogo(); }, 1200);
 
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () {
     syncViewport();
     onScroll();
   });
+  measureSurfaces();
   syncNavTheme();
+  syncLogo();
 })();
