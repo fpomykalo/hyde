@@ -159,17 +159,38 @@
      headline wraps to two or three lines depending on the width, and the
      gaps above and below it should hold either way. Figma's spacing is
      eyebrow → 14 → headline → 24 → lede → 32 → strip → bottom. */
+  /* dvh, not vh: on a phone 100vh is the height with the browser chrome
+     retracted, so the foot of the hero — the logo strip — sits under the URL
+     bar until you scroll. dvh is the height actually on screen. */
   .section--hero {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 0 16px;
+    padding: 0 16px 16px;
     border-top: 0;
     height: 100vh;
+    height: 100dvh;
     min-height: 560px;
   }
 
   .hero__bg { left: 0; width: 100%; }
+
+  /* The video is an absolutely positioned sibling, so it paints above anything
+     the mobile layout leaves in normal flow. The reveal masked that: its
+     translate makes a stacking context, and the text vanished the instant the
+     transform was cleared at the end of the animation. Positioning the content
+     puts it above the video for good.
+     Relative, not static — and `inset: auto` with it, or the desktop rules'
+     left/top start applying as relative offsets and shunt the text across the
+     screen. */
+  .hero__eyebrow,
+  .hero__line,
+  .hero__lede,
+  .logostrip--hero {
+    position: relative;
+    inset: auto;
+    z-index: 1;
+  }
 
   .hero__top,
   .hero__bottom { display: contents; }
@@ -177,7 +198,6 @@
   .hero__rule { display: none; }
 
   .hero__eyebrow {
-    position: static;
     margin: 0 0 14px;
     font-size: 10px;
     line-height: 10px;
@@ -185,7 +205,6 @@
   }
 
   .hero__line {
-    position: static;
     width: auto;
     font-size: 62.992px;
     line-height: 56.693px;
@@ -199,7 +218,6 @@
   .hero__line--two { margin-top: 11px; }
 
   .hero__lede {
-    position: static;
     width: auto;
     max-width: 270px;
     margin: 24px 0 0;
@@ -216,15 +234,13 @@
     height: 45px;
   }
 
-  .logostrip::after { border-left: 0; border-right: 0; }
-
   /* relative, not static — the viewport and label inside are absolutely
-     positioned and must keep resolving against the strip. */
+     positioned and must keep resolving against the strip. Both strips sit
+     inside the 16px gutter, like everything else on the page. */
   .logostrip--hero {
-    position: relative;
     inset: auto;
-    margin: 32px -16px 0;
-    width: calc(100% + 32px);
+    margin: 32px 0 0;
+    width: 100%;
     flex: none;
   }
 
@@ -232,8 +248,8 @@
     position: relative;
     inset: auto;
     order: 6;
-    margin: 30px -16px 0;
-    width: calc(100% + 32px);
+    margin: 30px 0 0;
+    width: 100%;
   }
 
   .logostrip__viewport { left: 111px; }
@@ -253,16 +269,27 @@
     max-width: 95px;
   }
 
+  /* Both labels drop to the eyebrow chip's 10px. The desktop rules set 14px
+     at two-class specificity, so matching that specificity here is what makes
+     the override stick — a bare .logostrip__label loses and the label spills
+     out of its 112px cell into the first logo. */
+  .logostrip--hero .logostrip__label,
+  .logostrip--careers .logostrip__label {
+    top: 10px;
+    font-size: 10px;
+    line-height: 13px;
+    letter-spacing: 1px;
+  }
+
   /* "our partners" is one line on desktop and two in the mobile frame, so it
      is wrapped by width here rather than by a break in the markup. */
   .logostrip--hero .logostrip__label {
-    top: 10px;
     white-space: normal;
     max-width: 60px;
   }
   /* Only the authored break, so it is always the two lines Figma draws and
      never a third that would overflow the 45px strip. */
-  .logostrip--careers .logostrip__label { top: 10px; max-width: none; }
+  .logostrip--careers .logostrip__label { max-width: none; }
 
   /* ------------------------------------------------------------- all cards */
 
@@ -344,8 +371,16 @@
 
   .paths__card--one { margin-top: 30px; }
 
-  /* These two keep their text over the image, so the card is just the media */
-  .section--paths .card__media { height: 281px; }
+  /* These two keep their text over the image, so the card is just the media.
+     Ratio rather than a fixed height: Figma's 361 x 281 is the desktop card's
+     641 x 500 at 393 wide, but pinning the height alone lets it flatten on any
+     wider phone. */
+  .section--paths .card__media {
+    height: auto;
+    aspect-ratio: 641 / 500;
+  }
+
+  .section--paths .card__overlay { inset: 1px; height: auto; }
 
   .paths__chip  { left: 17px; top: 17px; }
   .paths__title { left: 17px; top: 54px; }
@@ -423,8 +458,9 @@
     margin: 23px 0 0;
   }
 
-  /* No tab timer on mobile, so the bar shows the fill Figma draws */
-  .campfire__progress { width: 93%; }
+  /* No tabs on mobile means no timer to fill the bar, so the rule under each
+     title is left as the plain hairline rather than a part-filled track. */
+  .campfire__progress { display: none; }
 
   .campfire__copy {
     position: static;
@@ -477,20 +513,29 @@
 
   /* ---------------------------------------------------------------- careers */
 
+  /* The rules between jobs run edge to edge in the mobile frame, so the list
+     breaks out of the gutter and each job pads itself back in. The list's own
+     bottom rule is the one Figma draws under the last job. */
   .careers__list {
     position: static;
     order: 7;
-    width: 100%;
+    width: calc(100% + 32px);
     height: auto;
-    margin-top: 30px;
+    margin: 30px -16px 0;
+    border-bottom: 1px solid var(--hairline);
   }
 
   .careers__list::after { display: none; }
 
+  /* The job is an <a>. Desktop blockifies it by positioning it absolutely, so
+     dropping back to static here left it inline — where horizontal padding
+     doesn't indent the block children and a border draws around the text
+     rather than the row. It has to be blockified explicitly. */
   .job {
     position: static;
+    display: block;
     width: 100%;
-    padding: 16px 0;
+    padding: 16px 16px 30px;
     border-top: 1px solid var(--hairline);
   }
 
@@ -501,7 +546,7 @@
 
   .job__title {
     position: static;
-    margin: 7px 0 0;
+    margin: 15px 0 0;
     font-size: 18px;
     letter-spacing: 0.54px;
     white-space: normal;
@@ -512,7 +557,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: 14px;
+    margin-top: 17px;
   }
 
   .careers__cta { margin: 30px 0; }
@@ -569,6 +614,8 @@
     min-height: 0;
     padding: 17px 16px 30px;
     border-top: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
   .footer__cta-primary   { order: 1; }
@@ -577,7 +624,6 @@
   .footer__legal--privacy { order: 4; }
   .footer__legal--terms   { order: 5; }
   .footer__legal--sla     { order: 6; }
-  .footer__wordmark      { order: 7; }
   .footer__legal--copy   { order: 8; }
 
   .footer__cta-primary,
@@ -600,12 +646,29 @@
 
   .footer__links { font-size: 16px; line-height: 22px; }
 
-  .footer__mark { display: none; }
+  /* Figma's mobile footer signs off with the full lockup — mark and wordmark
+     side by side across the content width — not the wordmark alone. The
+     proportions are measured off that 361 x 106 vector. `margin-top: auto`
+     collects the slack of a full-height footer above it, so the lockup and
+     the copyright sit at the foot of the viewport. */
+  .footer__marks {
+    display: flex;
+    align-items: center;
+    gap: 7.8%;
+    order: 7;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 60px;
+  }
+
+  .footer__mark {
+    position: static;
+    width: 26.9%;
+  }
 
   .footer__wordmark {
     position: static;
-    width: 100%;
-    margin-top: 60px;
+    width: 65.4%;
   }
 
   .footer__legal {

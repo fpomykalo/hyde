@@ -32,6 +32,24 @@ assets/             see assets/README.md
 - **Never switch a wrapper to `position: static` for mobile** if it has
   absolutely positioned children — they escape to the section and stack. Use
   `position: relative; inset: auto;` instead. This caused four separate bugs.
+- **`position: relative` needs `inset: auto` with it**, for the mirror reason:
+  the desktop rule's `left`/`top` stop being ignored and start applying as
+  relative offsets. The hero headline slid 79px across the screen this way.
+- **`position: static` un-blockifies.** `.job` is an `<a>`; desktop blockifies
+  it by positioning it absolutely, so setting it static on mobile left it
+  `display: inline`, where horizontal padding doesn't indent block children
+  and a border wraps the text rather than the row. Set `display: block` too.
+- **An absolutely positioned sibling paints above in-flow content**, so mobile
+  content that used to be positioned must be given `position: relative` and a
+  `z-index` — see the hero, where the video covered the headline. A `.reveal`
+  masks this until it finishes: its `translateY` makes a stacking context, and
+  the text vanishes at the exact moment the transform is cleared.
+- **Carousels need `touch-action: pan-y`.** Without it the browser claims a
+  horizontal swipe as a scroll and kills the drag with `pointercancel` after
+  the first `pointermove`.
+- **The hero and footer use `100dvh`**, not `100vh`: on a phone `100vh` is the
+  height with the browser chrome retracted, so the foot of the hero sits under
+  the URL bar until you scroll.
 - **An absolutely positioned background paints above in-flow content.** The
   footer ground is a background on the section, not a positioned child, for
   exactly this reason.
@@ -78,4 +96,9 @@ button widths read 1–2px wide and nothing else should differ.
 
 ## Open
 
-- Campfire gradient pairings are a best guess; six were supplied for four tabs.
+- Figma's mobile frame is inconsistent about the gutter — eyebrows and ledes
+  sit at x=16, headings and the Two Paths cards at x=17 (so those cards run
+  17/15). The build normalises everything to a 16px gutter; full-bleed items
+  (campfire illustrations, the rules between jobs) stay edge to edge as drawn.
+- Figma's mobile careers list shows three jobs; the build carries the desktop
+  frame's five.

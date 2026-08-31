@@ -654,11 +654,16 @@ the top minds</p>
       </div>
     </div>
 
-    <span class="footer__mark">
-      <img src="assets/vectors/logomark.svg" alt="" width="191" height="220">
-    </span>
-    <span class="footer__wordmark">
-      <img src="assets/vectors/wordmark.svg" alt="" width="632" height="254">
+    <!-- Transparent to layout on desktop, so the two marks keep their own
+         absolute positions; a flex row on mobile, where Figma draws them as
+         one lockup across the content width. -->
+    <span class="footer__marks">
+      <span class="footer__mark">
+        <img src="assets/vectors/logomark.svg" alt="" width="191" height="220">
+      </span>
+      <span class="footer__wordmark">
+        <img src="assets/vectors/wordmark.svg" alt="" width="632" height="254">
+      </span>
     </span>
 
     <a class="footer__legal footer__legal--privacy cap" href="#">Privacy Policy</a>

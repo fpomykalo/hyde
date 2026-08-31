@@ -942,7 +942,14 @@ a {
   cursor: grab;
 }
 
-.industries__viewport.is-dragging { cursor: grabbing; }
+/* pan-y hands the browser the vertical scroll and keeps the horizontal
+   gesture. Without it a swipe across the track is claimed as a page scroll and
+   the drag dies on the pointercancel that follows. */
+.industries__viewport,
+.blog__viewport { touch-action: pan-y; }
+
+.industries__viewport.is-dragging,
+.blog__viewport.is-dragging { cursor: grabbing; user-select: none; }
 
 /* A flex row rather than absolute offsets, so the same markup works on mobile
    where each card takes the full width. The negative margin reproduces the
@@ -1219,6 +1226,10 @@ a {
   align-items: center;
   height: 33px;
 }
+
+/* A grouping hook for mobile, where the two become one lockup. Transparent to
+   layout here so each keeps its own absolute position. */
+.footer__marks { display: contents; }
 
 /* The two marks are the only things that scale. Each is capped against the
    viewport height as well as --rb so a wide, short window can't let them grow

@@ -121,7 +121,16 @@ What changes beyond type and spacing:
   the image into a bordered box beneath it; only the index and title stay on
   the photo. Both become one-card carousels — four dots for four industries,
   two for the two articles.
-- **Two Paths cards** keep their text over the image.
-- **Logo strips** run full-bleed with four cells instead of seven.
+- **Two Paths cards** keep their text over the image, and hold the desktop
+  card's 641:500 ratio by `aspect-ratio` rather than a fixed height, so they
+  don't flatten on a phone wider than 393.
+- **Logo strips** sit inside the gutter with four cells instead of seven, and
+  their labels drop to the eyebrow's 10px.
+- **Campfire** shows the rule under each title as a plain hairline — there are
+  no tabs here, so there is no timer to fill it.
+- **Careers** rules run edge to edge between jobs, with the job text padded
+  back into the gutter.
+- **Footer** fills the viewport and signs off with the full lockup, mark and
+  wordmark side by side, as the mobile frame draws it.
 
 See `CLAUDE.md` for the traps in maintaining both layouts from one document.

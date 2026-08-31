@@ -508,28 +508,49 @@
     if (next) next.addEventListener('click', function () { goTo(index + 1); });
     if (prev) prev.addEventListener('click', function () { goTo(index - 1); });
 
-    // Drag / swipe
-    var dragging = false, startX = 0, startOffset = 0, moved = 0;
+    // Drag / swipe. A touch drag starts undecided: the first few pixels say
+    // whether the finger is swiping the track or scrolling the page, and only
+    // a horizontal one takes the gesture. Without that the track jitters
+    // sideways under every vertical scroll that begins on a card.
+    var down = false, locked = false, dragging = false;
+    var startX = 0, startY = 0, startOffset = 0, moved = 0;
+    var LOCK = 6;
 
     viewport.addEventListener('pointerdown', function (e) {
-      if (e.button !== 0) return;
-      dragging = true;
+      if (e.button !== 0 || maxOffset <= 0) return;
+      down = true;
+      locked = false;
+      dragging = false;
       moved = 0;
       startX = e.clientX;
+      startY = e.clientY;
       startOffset = offsetFor(index);
-      viewport.classList.add('is-dragging');
-      track.classList.add('no-anim');
-      viewport.setPointerCapture(e.pointerId);
     });
 
     viewport.addEventListener('pointermove', function (e) {
+      if (!down) return;
+      var dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+
+      if (!locked) {
+        if (Math.abs(dx) < LOCK && Math.abs(dy) < LOCK) return;
+        locked = true;
+        // Vertical wins: let go and leave the page to scroll.
+        if (Math.abs(dy) > Math.abs(dx)) { down = false; return; }
+        dragging = true;
+        viewport.classList.add('is-dragging');
+        track.classList.add('no-anim');
+        try { viewport.setPointerCapture(e.pointerId); } catch (err) {}
+      }
+
       if (!dragging) return;
-      moved = e.clientX - startX;
+      moved = dx;
       var offset = Math.max(0, Math.min(maxOffset, startOffset - moved));
       track.style.transform = 'translateX(' + -offset + 'px)';
     });
 
     function endDrag() {
+      down = false;
       if (!dragging) return;
       dragging = false;
       viewport.classList.remove('is-dragging');
