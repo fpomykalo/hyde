@@ -103,8 +103,24 @@ white and the CTA goes solid accent, per the Figma component variants.
 
 Everything respects `prefers-reduced-motion`.
 
-## Not in this build
+## Mobile
 
-Mobile. The Figma file has a 393px frame; this build is desktop only, per
-scope. Sections are ordinary blocks in normal flow, so a mobile pass restacks
-them without touching the desktop geometry.
+Below 900px `styles/mobile.css` takes over, from the Figma frame *Mobile*
+(393 × 6353). Each section becomes a flex column with a 16px gutter and a
+full-bleed rule between sections, reordered with `order` so the running order
+is eyebrow → heading → lede → CTA → content.
+
+What changes beyond type and spacing:
+
+- **Nav** collapses to the logo and a hamburger. Figma draws only the closed
+  state, so the open panel is built from the same links.
+- **Campfire** drops the tabs: all four blocks stack, each with its
+  illustration full-bleed above its own text.
+- **Industries and Blog cards** move their chips, copy and link out from over
+  the image into a bordered box beneath it; only the index and title stay on
+  the photo. Both become one-card carousels — four dots for four industries,
+  two for the two articles.
+- **Two Paths cards** keep their text over the image.
+- **Logo strips** run full-bleed with four cells instead of seven.
+
+See `CLAUDE.md` for the traps in maintaining both layouts from one document.

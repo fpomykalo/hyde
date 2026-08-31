@@ -33,6 +33,7 @@
 
 html {
   background: var(--white);
+  overflow-x: clip;   /* belt and braces with body; iOS ignores hidden here */
 }
 
 /* Neue Montreal ships Regular only. Headings default to bold, and a browser
@@ -319,6 +320,11 @@ a {
 
 .card:hover .card__overlay--hover { opacity: 1; }
 
+/* A grouping hook for mobile, where the chips, copy and link move out from
+   over the image into a bordered box beneath it. On desktop it is transparent
+   to layout so its children keep their absolute positions. */
+.card__info { display: contents; }
+
 /* Card title — Neue Montreal 40/40 */
 .card__title {
   position: absolute;
@@ -391,6 +397,10 @@ a {
 
 .nav.is-logo-dark .nav__logo .logo--light { opacity: 0; }
 .nav.is-logo-dark .nav__logo .logo--dark  { opacity: 1; }
+
+.nav__menu { display: contents; }
+
+.nav__toggle { display: none; }
 
 .nav__item {
   position: absolute;
@@ -565,7 +575,8 @@ a {
   height: 60px;
 }
 
-.logostrip--hero { bottom: 20px; }
+.logostrip--hero    { bottom: 20px; }
+.logostrip--careers { top: 162px; }
 
 /* Outer box drawn as a ring so it doesn't inset the children */
 .logostrip::after {
@@ -749,9 +760,18 @@ a {
   height: 600px;
 }
 
+/* Each item pairs one illustration with its text. On desktop the wrapper is
+   transparent to layout and the two halves are placed into the stage and the
+   panel; on mobile the item becomes a block and they stack. */
+.campfire__body { position: absolute; inset: 0; }
+.campfire__item { display: contents; }
+
 .campfire__pane {
   position: absolute;
-  inset: 0;
+  left: 80px;
+  top: 176px;
+  width: 321px;
+  height: 600px;
   opacity: 0;
   visibility: hidden;
   transition: opacity 450ms var(--ease-out), visibility 0s linear 450ms;
@@ -841,19 +861,14 @@ a {
   height: 600px;
 }
 
-.campfire__frames {
+.campfire__frame {
   position: absolute;
-  left: 1px;
-  top: 1px;
+  left: 401px;
+  top: 177px;
   width: 959px;
   height: 598px;
   overflow: hidden;
   background: #55585c;
-}
-
-.campfire__frame {
-  position: absolute;
-  inset: 0;
   opacity: 0;
   visibility: hidden;
   transition: opacity 600ms var(--ease-out), visibility 0s linear 600ms;
@@ -884,7 +899,7 @@ a {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(calc(-50% + var(--art-shift, 0px)), -50%);
+  transform: translate(calc(-50% + var(--art-shift, 0px)), -50%) scale(var(--art-scale, 1));
   z-index: 1;
 }
 
@@ -923,8 +938,12 @@ a {
 
 .industries__viewport.is-dragging { cursor: grabbing; }
 
+/* A flex row rather than absolute offsets, so the same markup works on mobile
+   where each card takes the full width. The negative margin reproduces the
+   shared 1px border, which is what makes the step 523 against a 524 card. */
 .industries__track {
   position: relative;
+  display: flex;
   height: 500px;
   will-change: transform;
   transition: transform 700ms var(--ease-out);
@@ -933,10 +952,15 @@ a {
 .industries__track.no-anim { transition: none; }
 
 .industries__card {
+  position: relative;
+  flex: 0 0 524px;
   top: 0;
   width: 524px;
   height: 500px;
+  margin-left: -1px;
 }
+
+.industries__card:first-child { margin-left: 0; }
 
 .industries__card .card-index { top: 20px; right: 20px; }
 
@@ -984,15 +1008,22 @@ a {
 
 .industries__arrow img { display: block; width: 28px; height: 53px; }
 
-.industries__dots {
+.industries__dots,
+.blog__dots {
   position: absolute;
-  left: 691px;
-  top: 644px;
   display: flex;
   gap: 10px;
 }
 
-.industries__dot {
+.industries__dots { left: 691px; top: 644px; }
+
+/* Blog is two cards side by side on desktop; the carousel and its dots only
+   come into play on mobile, where one card fills the screen. */
+.blog__viewport,
+.blog__track { display: contents; }
+.blog__dots { display: none; }
+
+.dotnav__dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -1003,7 +1034,7 @@ a {
   transition: background-color 300ms var(--ease-out);
 }
 
-.industries__dot.is-active { background: var(--black); }
+.dotnav__dot.is-active { background: var(--black); }
 
 /* --------------------------------------------------------------------------
    Careers
@@ -1110,13 +1141,13 @@ a {
 .section--footer {
   --rb: max(360px, calc(var(--vw) * 0.494444 - 80px));
   --rb-left: 50.5556%;              /* 728 / 1440 */
-}
-
-.footer__bg {
-  position: absolute;
-  inset: 0;
   background: var(--footer-bg);
 }
+
+/* The ground is the section's own background. As a positioned element this
+   painted above the in-flow mobile content, hiding everything that wasn't
+   itself positioned. */
+.footer__bg { display: none; }
 
 .footer__cta-primary   { position: absolute; left: 80px; top: 96px; width: 208px; }
 .footer__cta-secondary { position: absolute; left: 80px; top: 151px; width: 155px; }

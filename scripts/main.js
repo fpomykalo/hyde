@@ -290,6 +290,36 @@
   }
 
   /* ------------------------------------------------------------------------
+     3b. Mobile menu
+
+     Figma draws the closed hamburger only, so the open state is built from the
+     same links rather than invented.
+     ---------------------------------------------------------------------- */
+
+  (function menu() {
+    var toggle = document.getElementById('nav-toggle');
+    if (!toggle) return;
+
+    function setOpen(open) {
+      nav.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!nav.classList.contains('is-open'));
+    });
+
+    nav.querySelectorAll('.nav__item').forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  })();
+
+  /* ------------------------------------------------------------------------
      4. Campfire tabs
 
      Each tab reads for 7s: the black bar fills the grey track, then the next
@@ -300,6 +330,10 @@
   (function campfire() {
     var section = document.querySelector('.section--campfire');
     if (!section) return;
+
+    // Mobile stacks all four blocks with no tabs, so there is nothing to drive
+    var mq = window.matchMedia('(max-width: 900px)');
+    if (mq.matches) return;
 
     var tabs = Array.prototype.slice.call(section.querySelectorAll('.campfire__tab'));
     var panes = Array.prototype.slice.call(section.querySelectorAll('.campfire__pane'));
@@ -367,7 +401,7 @@
       });
     });
 
-    startTimer();
+    show(0);
 
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(
@@ -393,41 +427,67 @@
      the track can be dragged.
      ---------------------------------------------------------------------- */
 
-  (function carousel() {
-    var viewport = document.querySelector('.industries__viewport');
-    var track = document.getElementById('ind-track');
-    var prev = document.getElementById('ind-prev');
-    var next = document.getElementById('ind-next');
-    var dotsHost = document.getElementById('ind-dots');
+  function carousel(opts) {
+    var viewport = document.querySelector(opts.viewport);
+    var track = document.querySelector(opts.track);
     if (!viewport || !track) return;
 
-    var cards = Array.prototype.slice.call(track.querySelectorAll('.industries__card'));
-    var STEP = 523;
-    var CARD_W = 524;
-    var viewportW = 1280;
-    var trackW = (cards.length - 1) * STEP + CARD_W;
-    var maxOffset = Math.max(0, trackW - viewportW);
+    var prev = opts.prev ? document.querySelector(opts.prev) : null;
+    var next = opts.next ? document.querySelector(opts.next) : null;
+    var dotsHost = document.querySelector(opts.dots);
+    var cards = Array.prototype.slice.call(track.querySelectorAll(opts.card));
+    if (!cards.length || !dotsHost) return;
 
-    // Dots for the positions the track can actually reach, not one per card —
-    // the last card can't scroll to the left edge, so a per-card count would
-    // leave dots that resolve to the same offset and do nothing when clicked.
-    var pageCount = maxOffset > 0 ? Math.ceil(maxOffset / STEP) + 1 : 1;
     var index = 0;
     var dots = [];
+    var step = 0;
+    var maxOffset = 0;
+    var pageCount = 1;
+
+    // Measured rather than hardcoded: desktop lays the cards out at 524 wide on
+    // a 523 step (they share a border), mobile gives each one the full width.
+    function measure() {
+      var vpW = viewport.getBoundingClientRect().width;
+      var first = cards[0].getBoundingClientRect();
+      step = cards.length > 1
+        ? Math.abs(cards[1].getBoundingClientRect().left - first.left) || first.width
+        : first.width;
+      var trackW = (cards.length - 1) * step + first.width;
+      maxOffset = Math.max(0, trackW - vpW);
+      // Dots count the positions the track can actually reach. One card per
+      // screen makes every card its own page; on desktop the last card cannot
+      // reach the left edge, so there are fewer pages than cards.
+      pageCount = maxOffset > 0 ? Math.min(cards.length, Math.ceil(maxOffset / step) + 1) : 1;
+    }
 
     function offsetFor(i) {
-      return Math.min(i * STEP, maxOffset);
+      return Math.min(i * step, maxOffset);
+    }
+
+    function buildDots() {
+      dotsHost.innerHTML = '';
+      dots = [];
+      for (var i = 0; i < pageCount; i++) {
+        (function (i) {
+          var dot = document.createElement('button');
+          dot.className = 'dotnav__dot';
+          dot.type = 'button';
+          dot.setAttribute('role', 'tab');
+          dot.setAttribute('aria-label', opts.label + ' ' + (i + 1));
+          dot.addEventListener('click', function () { goTo(i); });
+          dotsHost.appendChild(dot);
+          dots.push(dot);
+        })(i);
+      }
     }
 
     function render(animate) {
       track.classList.toggle('no-anim', !animate);
       track.style.transform = 'translateX(' + -offsetFor(index) + 'px)';
-
       dots.forEach(function (d, i) {
         d.classList.toggle('is-active', i === index);
         d.setAttribute('aria-selected', i === index ? 'true' : 'false');
       });
-
       if (prev) prev.hidden = index === 0;
       if (next) next.hidden = offsetFor(index) >= maxOffset - 0.5;
     }
@@ -437,29 +497,19 @@
       render(animate !== false);
     }
 
-    for (var i = 0; i < pageCount; i++) {
-      (function (i) {
-        var dot = document.createElement('button');
-        dot.className = 'industries__dot';
-        dot.type = 'button';
-        dot.setAttribute('role', 'tab');
-        dot.setAttribute('aria-label', 'Industry ' + (i + 1));
-        dot.addEventListener('click', function () {
-          goTo(i);
-        });
-        dotsHost.appendChild(dot);
-        dots.push(dot);
-      })(i);
+    function relayout() {
+      var was = pageCount;
+      measure();
+      if (pageCount !== was) buildDots();
+      goTo(Math.min(index, pageCount - 1), false);
+      requestAnimationFrame(function () { track.classList.remove('no-anim'); });
     }
 
     if (next) next.addEventListener('click', function () { goTo(index + 1); });
     if (prev) prev.addEventListener('click', function () { goTo(index - 1); });
 
     // Drag / swipe
-    var dragging = false;
-    var startX = 0;
-    var startOffset = 0;
-    var moved = 0;
+    var dragging = false, startX = 0, startOffset = 0, moved = 0;
 
     viewport.addEventListener('pointerdown', function (e) {
       if (e.button !== 0) return;
@@ -484,27 +534,34 @@
       dragging = false;
       viewport.classList.remove('is-dragging');
       var offset = Math.max(0, Math.min(maxOffset, startOffset - moved));
-      goTo(Math.min(pageCount - 1, Math.round(offset / STEP)));
+      goTo(Math.min(pageCount - 1, Math.round(offset / step)));
     }
 
     viewport.addEventListener('pointerup', endDrag);
     viewport.addEventListener('pointercancel', endDrag);
 
     // A drag shouldn't fire the link underneath it
-    viewport.addEventListener(
-      'click',
-      function (e) {
-        if (Math.abs(moved) > 5) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      },
-      true
-    );
+    viewport.addEventListener('click', function (e) {
+      if (Math.abs(moved) > 5) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
 
+    measure();
+    buildDots();
     render(false);
     requestAnimationFrame(function () { track.classList.remove('no-anim'); });
-  })();
+    window.addEventListener('resize', relayout);
+  }
+
+  carousel({
+    viewport: '.industries__viewport', track: '#ind-track', card: '.industries__card',
+    prev: '#ind-prev', next: '#ind-next', dots: '#ind-dots', label: 'Industry'
+  });
+
+  // Blog is two cards side by side on desktop, one at a time on mobile
+  carousel({
+    viewport: '.blog__viewport', track: '#blog-track', card: '.card',
+    dots: '#blog-dots', label: 'Article'
+  });
 
   /* ------------------------------------------------------------------------
      6. Logo marquees

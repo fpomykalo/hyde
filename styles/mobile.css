@@ -1,0 +1,622 @@
+/* ==========================================================================
+   Hyde — mobile
+
+   From the Figma frame "Mobile" (393 × 6353). The desktop build positions
+   everything absolutely inside a fixed 1440 column; here each section becomes
+   a flex column in normal flow with a 16px gutter, so the layout reflows to
+   any phone width rather than only working at exactly 393.
+
+   Section order on mobile is eyebrow → heading → lede → CTA → content, which
+   is not the DOM order the desktop layout wants, so the running order is set
+   with `order` rather than by moving the markup.
+
+   Mobile type scale (Figma):
+     hero headline   New Science Medium  62.99 / 56.69   -2
+     section H2      New Science Medium     36 / 36      -0.72
+     card title      Neue Montreal          30 / 30
+     lede, job title Neue Montreal          18 / 20       0.54
+     hero lede       Neue Montreal          16 / 20       0.48
+     card copy       Neue Montreal          12 / 16       0.36
+     chips           IBM Plex Mono Medium   10            1
+     buttons         IBM Plex Mono Regular  14            0.42
+   ========================================================================== */
+
+@media (max-width: 900px) {
+
+  /* ------------------------------------------------------------------ shell */
+
+  .page,
+  .section {
+    width: 100%;
+  }
+
+  .section {
+    height: auto;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 16px 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  /* The bordered header blocks are a desktop device; mobile separates sections
+     with a full-bleed rule instead, which is the section's own border-top. */
+  .header-block { display: none; }
+
+  .eyebrow          { position: static; order: 1; align-self: flex-start; margin-bottom: 16px; }
+  .h2               { position: static; order: 2; }
+  .campfire__mark   { position: static; order: 3; }
+  .section-lede     { position: static; order: 4; }
+  .careers__cta,
+  .blog__cta        { position: static; order: 9; align-self: flex-start; }
+
+  .h2 {
+    font-size: 36px;
+    line-height: 36px;
+    letter-spacing: -0.72px;
+    white-space: normal;
+  }
+
+  .section-lede {
+    width: auto;
+    max-width: 300px;
+    margin-top: 16px;
+    font-size: 18px;
+    line-height: 20px;
+    letter-spacing: 0.54px;
+  }
+
+  /* ------------------------------------------------------------------- nav */
+
+  .nav {
+    left: 0;
+    transform: none;
+    width: 100%;
+    height: 53px;
+  }
+
+  .nav__logo,
+  .nav__logo img,
+  .nav__logo .asset {
+    width: 74.5px;
+    height: 22px;
+  }
+
+  .nav__logo { left: 16px; top: 16px; }
+
+  /* Figma draws a closed hamburger only, so the open state is built from the
+     same links rather than invented: a full-height panel on the page ground. */
+  .nav__toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    position: absolute;
+    right: 16px;
+    top: 12px;
+    width: 30px;
+    height: 30px;
+    padding: 0 4px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .nav__toggle span {
+    display: block;
+    height: 1.5px;
+    background: var(--white);
+    transition: transform 300ms var(--ease-out), opacity 200ms var(--ease-out);
+  }
+
+  .nav.is-logo-dark .nav__toggle span { background: var(--black); }
+
+  .nav.is-open .nav__toggle span { background: var(--black); }
+  .nav.is-open .nav__toggle span:first-child { transform: translateY(3.25px) rotate(45deg); }
+  .nav.is-open .nav__toggle span:last-child  { transform: translateY(-3.25px) rotate(-45deg); }
+
+  .nav__menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: fixed;
+    inset: 0;
+    padding: 90px 16px 16px;
+    background: var(--white);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 300ms var(--ease-out), visibility 0s linear 300ms;
+    z-index: 1;
+  }
+
+  .nav.is-open .nav__menu {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 300ms var(--ease-out), visibility 0s;
+  }
+
+  .nav__item {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 18px 20px;
+    justify-content: flex-start;
+    box-shadow: inset 0 0 0 1px var(--black);
+    background: var(--white);
+    color: var(--black);
+  }
+
+  .nav__item--contact {
+    background: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+    color: var(--white);
+  }
+
+  /* ------------------------------------------------------------------ hero */
+
+  /* Stacked from the bottom rather than positioned at fixed offsets: the
+     headline wraps to two or three lines depending on the width, and the
+     gaps above and below it should hold either way. Figma's spacing is
+     eyebrow → 14 → headline → 24 → lede → 32 → strip → bottom. */
+  .section--hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 16px;
+    border-top: 0;
+    height: 100vh;
+    min-height: 560px;
+  }
+
+  .hero__bg { left: 0; width: 100%; }
+
+  .hero__top,
+  .hero__bottom { display: contents; }
+
+  .hero__rule { display: none; }
+
+  .hero__eyebrow {
+    position: static;
+    margin: 0 0 14px;
+    font-size: 10px;
+    line-height: 10px;
+    letter-spacing: 1px;
+  }
+
+  .hero__line {
+    position: static;
+    width: auto;
+    font-size: 62.992px;
+    line-height: 56.693px;
+    letter-spacing: -2px;
+    text-align: left;
+    white-space: normal;
+  }
+
+  /* Leading minus cap height, so the two elements read as consecutive lines
+     of one headline rather than two blocks. */
+  .hero__line--two { margin-top: 11px; }
+
+  .hero__lede {
+    position: static;
+    width: auto;
+    max-width: 270px;
+    margin: 24px 0 0;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.48px;
+  }
+
+  /* ----------------------------------------------------------- logo strips */
+
+  .logostrip {
+    left: 0;
+    width: 100%;
+    height: 45px;
+  }
+
+  .logostrip::after { border-left: 0; border-right: 0; }
+
+  /* relative, not static — the viewport and label inside are absolutely
+     positioned and must keep resolving against the strip. */
+  .logostrip--hero {
+    position: relative;
+    inset: auto;
+    margin: 32px -16px 0;
+    width: calc(100% + 32px);
+    flex: none;
+  }
+
+  .logostrip--careers {
+    position: relative;
+    inset: auto;
+    order: 6;
+    margin: 30px -16px 0;
+    width: calc(100% + 32px);
+  }
+
+  .logostrip__viewport { left: 111px; }
+  .logostrip__tile     { width: 112px; }
+
+  .logostrip__tile img,
+  .logostrip__tile .asset { transform: scale(0.62); }
+
+  /* pre-line keeps the authored break ("built by / the top minds") rather than
+     re-wrapping to three lines inside the 112px label cell. */
+  .logostrip__label {
+    left: 16px;
+    font-size: 10px;
+    line-height: 13px;
+    letter-spacing: 1px;
+    white-space: pre-line;
+    max-width: 95px;
+  }
+
+  /* "our partners" is one line on desktop and two in the mobile frame, so it
+     is wrapped by width here rather than by a break in the markup. */
+  .logostrip--hero .logostrip__label {
+    top: 10px;
+    white-space: normal;
+    max-width: 60px;
+  }
+  /* Only the authored break, so it is always the two lines Figma draws and
+     never a third that would overflow the 45px strip. */
+  .logostrip--careers .logostrip__label { top: 10px; max-width: none; }
+
+  /* ------------------------------------------------------------- all cards */
+
+  /* Still a containing block for the overlays, but every desktop offset has
+     to go or the card keeps being nudged by its absolute position. */
+  .card {
+    position: relative;
+    inset: auto;
+    margin-left: 0;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .card::after { display: none; }
+
+  .card__media {
+    position: relative;
+    inset: auto;
+    height: 281px;
+    outline: 1px solid var(--hairline);
+    outline-offset: -1px;
+  }
+
+  .card__overlay { inset: 0 0 auto; height: 281px; }
+
+  .card-index  { top: 17px; right: 17px; }
+  .card__title { font-size: 30px; line-height: 30px; }
+
+  /* Chips, copy and link leave the image and become a bordered box below it */
+  .card__info {
+    display: block;
+    position: relative;
+    padding: 16px;
+    outline: 1px solid var(--hairline);
+    outline-offset: -1px;
+    margin-top: -1px;
+  }
+
+  .card__info .chip {
+    position: static;
+    box-shadow: none;
+    background: var(--chip-fill);
+    color: var(--black);
+    margin: 0 6px 6px 0;
+  }
+
+  .card__info .card__copy {
+    position: static;
+    width: auto;
+    margin: 16px 0 0;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.36px;
+    color: var(--black);
+  }
+
+  .card__info .card-link {
+    position: static;
+    display: inline-block;
+    margin-top: 16px;
+    color: var(--black);
+  }
+
+  .ind__chips,
+  .blog__meta {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  /* ------------------------------------------------- two paths (overlaid) */
+
+  .section--paths .card {
+    order: 6;
+    margin-top: 16px;
+  }
+
+  .paths__card--one { margin-top: 30px; }
+
+  /* These two keep their text over the image, so the card is just the media */
+  .section--paths .card__media { height: 281px; }
+
+  .paths__chip  { left: 17px; top: 17px; }
+  .paths__title { left: 17px; top: 54px; }
+
+  .paths__copy {
+    left: 17px;
+    top: 91px;
+    right: 17px;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.48px;
+  }
+
+  .paths__btn { left: 17px; top: auto; bottom: 17px; }
+
+  /* --------------------------------------------------------------- campfire */
+
+  .campfire__mark { margin: 12px 0 0; width: 44px; height: 27px; }
+  .campfire__mark img { width: 44px; height: 27px; }
+
+  .campfire__tabs,
+  .campfire__panel,
+  .campfire__stage { display: none; }
+
+  .campfire__body {
+    position: static;
+    order: 6;
+    margin: 30px -16px 0;
+    width: calc(100% + 32px);
+  }
+
+  .campfire__item { display: block; }
+
+  /* Illustration full-bleed, its text beneath — the mobile frame's rhythm */
+  .campfire__frame {
+    position: relative;   /* containing block for the gradient and caption */
+    inset: auto;
+    width: 100%;
+    height: 197px;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* The four diagrams keep their relative sizes: Figma's mobile vectors are a
+     consistent 0.42 of their desktop widths (184/437, 247/608, 209/499,
+     157/376). Scaling rather than re-sizing keeps the inline widths intact. */
+  .campfire__art { --art-scale: 0.42; }
+
+  /* The mobile frame carries no "+ ..." captions over the illustrations */
+  .campfire__caption { display: none; }
+
+  .campfire__pane,
+  .campfire__pane[hidden] {
+    display: block;
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 16px 16px 30px;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .campfire__title {
+    position: static;
+    width: auto;
+    margin: 0;
+    font-size: 16px;
+    letter-spacing: 0.48px;
+  }
+
+  .campfire__timeline {
+    position: static;
+    width: 100%;
+    margin: 23px 0 0;
+  }
+
+  /* No tab timer on mobile, so the bar shows the fill Figma draws */
+  .campfire__progress { width: 93%; }
+
+  .campfire__copy {
+    position: static;
+    width: auto;
+    margin-top: 16px;
+  }
+
+  .campfire__row p { width: auto; }
+
+  /* ------------------------------------------------------------- industries */
+
+  .industries__viewport {
+    position: static;
+    order: 6;
+    width: 100%;
+    height: auto;
+    margin-top: 30px;
+  }
+
+  .industries__track { height: auto; display: flex; }
+
+  /* relative, not static: the index and title are absolutely positioned and
+     would otherwise all resolve to the section and stack on one another. */
+  .industries__card {
+    position: relative;
+    flex: 0 0 100%;
+    width: 100%;
+    height: auto;
+    margin-left: 0;
+  }
+
+  /* Only the index and title stay on the image */
+  /* 17px clear of the image's foot, measured from the card top so the info
+     box below it doesn't move them. */
+  .ind__title { left: 17px; top: 243px; bottom: auto; }
+
+  .ind__copy,
+  .ind__link { position: static; }
+
+  .industries__arrow { display: none; }
+
+  .industries__dots,
+  .blog__dots {
+    position: static;
+    order: 7;
+    display: flex;
+    align-self: center;
+    margin: 20px 0 0;
+  }
+
+  /* ---------------------------------------------------------------- careers */
+
+  .careers__list {
+    position: static;
+    order: 7;
+    width: 100%;
+    height: auto;
+    margin-top: 30px;
+  }
+
+  .careers__list::after { display: none; }
+
+  .job {
+    position: static;
+    width: 100%;
+    padding: 16px 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .job:first-child { border-top: 0; }
+
+  .job__rule  { display: none; }
+  .job__index { position: static; display: block; }
+
+  .job__title {
+    position: static;
+    margin: 7px 0 0;
+    font-size: 18px;
+    letter-spacing: 0.54px;
+    white-space: normal;
+  }
+
+  .job__tags {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .careers__cta { margin: 30px 0; }
+
+  /* ------------------------------------------------------------------- blog */
+
+  .blog__viewport {
+    display: block;
+    order: 6;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 30px;
+    cursor: grab;
+  }
+
+  .blog__track {
+    display: flex;
+    will-change: transform;
+    transition: transform 700ms var(--ease-out);
+  }
+
+  .blog__track.no-anim { transition: none; }
+
+  .section--blog .card {
+    flex: 0 0 100%;
+    margin: 0;
+  }
+
+  .blog__chips { position: static; padding: 17px 0 0 17px; }
+
+  .blog__title { left: 17px; top: 213px; bottom: auto; }   /* two lines */
+
+  /* The chips sit over the image, so put them back on top of the media */
+  .section--blog .blog__chips {
+    position: absolute;
+    left: 17px;
+    top: 17px;
+    padding: 0;
+  }
+
+  .blog__cta { margin: 30px 0; }
+
+  /* ----------------------------------------------------------------- footer */
+
+  /* Figma's mobile order: the two CTAs, the link columns, the legal links,
+     then the wordmark, with the copyright last. */
+  .section--footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-left: 0;
+    height: auto;
+    min-height: 0;
+    padding: 17px 16px 30px;
+    border-top: 0;
+  }
+
+  .footer__cta-primary   { order: 1; }
+  .footer__cta-secondary { order: 2; }
+  .footer__cols          { order: 3; }
+  .footer__legal--privacy { order: 4; }
+  .footer__legal--terms   { order: 5; }
+  .footer__legal--sla     { order: 6; }
+  .footer__wordmark      { order: 7; }
+  .footer__legal--copy   { order: 8; }
+
+  .footer__cta-primary,
+  .footer__cta-secondary {
+    position: static;
+    display: flex;
+    width: 100%;
+  }
+
+  .footer__cta-secondary { margin-top: 16px; }
+
+  .footer__cols {
+    position: static;
+    width: 100%;
+    margin-top: 90px;
+    gap: 12px;
+  }
+
+  .footer__certs { display: none; }
+
+  .footer__links { font-size: 16px; line-height: 22px; }
+
+  .footer__mark { display: none; }
+
+  .footer__wordmark {
+    position: static;
+    width: 100%;
+    margin-top: 60px;
+  }
+
+  .footer__legal {
+    position: static;
+    display: block;
+    left: auto;
+    right: auto;
+    bottom: auto;
+  }
+
+  .footer__legal--privacy { margin-top: 90px; padding-top: 20px; border-top: 1px solid var(--hairline); align-self: stretch; }
+  .footer__legal--terms,
+  .footer__legal--sla     { margin-top: 10px; }
+  .footer__legal--copy    { margin-top: 30px; }
+}
